@@ -1,7 +1,4 @@
 dateparser
-matplotlib
 pandas
 plotly
-seaborn
-yfinance
 git+ssh://git@bitbucket.org/MattiasDC/py-utils.git@master

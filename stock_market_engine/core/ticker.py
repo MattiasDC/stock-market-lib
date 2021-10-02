@@ -1,7 +1,7 @@
 
 class Ticker:
 	def __init__(self, symbol):
-		self.symbol = symbol
+		self.__symbol = symbol
 
 	@property
 	def symbol(self):

@@ -13,7 +13,7 @@ class SignalSequence:
 	The given date is not included.
 	"""
 	def signals_since(self, date):
-		return [s if s.date > date for s in self.signals]
+		return [s for s in self.signals if s.date > date]
 
 	def add(self, signal):
 		assert(signal not in self.__signals)

@@ -3,12 +3,13 @@ import datetime
 import pandas as pd
 
 class OHLC:
-	def __init__(self):
-		self.__dates = pd.date_range(start=datetime.datetime.now().date(), periods=0, freq='D')
-		self.__open = self.__create_empty_time_series("Open", self.dates)
-		self.__high = self.__create_empty_time_series("High", self.dates)
-		self.__low = self.__create_empty_time_series("Low", self.dates)
-		self.__close = self.__create_empty_time_series("Close", self.dates)
+	@classmethod
+	def empty(cls):
+		return cls(pd.date_range(start=datetime.datetime.now().date(), periods=0, freq='D'),
+				   self.__create_empty_time_series("Open", self.dates),
+				   self.__create_empty_time_series("High", self.dates),
+				   self.__create_empty_time_series("Low", self.dates),
+				   self.__create_empty_time_series("Close", self.dates))
 
 	def __init__(self, dates, open, high, low, close):
 		self.__dates = pd.to_datetime(dates).dt.date

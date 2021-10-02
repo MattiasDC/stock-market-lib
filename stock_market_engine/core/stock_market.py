@@ -10,7 +10,7 @@ class StockMarket:
 		return self.__tickers
 
 	def ohlc(self, ticker):
-		return self.__ticker_OHLCs.get(ticker, OHLC())
+		return self.__ticker_OHLCs.get(ticker, OHLC.empty())
 
 	def update_ticker(self, ticker_OHLC):
 		assert(ticker_OHLC.ticker in self.tickers)

@@ -51,7 +51,7 @@ class OHLC:
 
 def merge_ohlcs(first, second):
 	assert(first.end + datetime.timedelta(days=1) == second.start)
-	return OHLC(pd.concat([first.dates, second.dates],
+	return OHLC(pd.concat([first.dates, second.dates]),
 				merge_time_series(first.open, second.open),
 				merge_time_series(first.high, second.high),
 				merge_time_series(first.low, second.low),

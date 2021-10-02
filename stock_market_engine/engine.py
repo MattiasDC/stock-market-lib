@@ -9,7 +9,7 @@ class Engine:
 
 	def update(self, date):
 		self.__stock_market_updater.update(date, self.__stock_market)
-		for detector in self.__signal_detector:
+		for detector in self.__signal_detectors:
 			detector.detect(date, self.__stock_market, self.__signal_sequence)
 
 	@property

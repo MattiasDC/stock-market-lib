@@ -17,5 +17,5 @@ class SignalSequence:
 
 	def add(self, signal):
 		assert(signal not in self.__signals)
-		assert(self.__signals || signal.date >= self.__signals[-1].date)
+		assert(self.__signals or signal.date >= self.__signals[-1].date)
 		self.__signals.append(signal)

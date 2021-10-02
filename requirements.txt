@@ -1,4 +1,3 @@
 dateparser
 pandas
 plotly
-git+ssh://git@bitbucket.org/MattiasDC/py-utils.git@master

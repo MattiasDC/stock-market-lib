@@ -66,4 +66,9 @@ class TimeSeries:
 		return self.values.ewm(span=days).mean()
 
 	def trimmed_start(self, days):
-		return TimeSeries(self.name, self.time_values.loc[self.time_values.date >= self.end - datetime.timedelta(days)])
+		return TimeSeries(self.name, self.time_values.loc[self.time_values.date >= self.end - datetime.timedelta(days=days)])
+
+def merge_time_series(first, second):
+	assert(first.name == second.name)
+	assert(first.end + datetime.timedelta(days=1) == second.start)
+	return TimeSeries(first.name, pd.concat(first.__day_data, second.__day_data))

@@ -1,6 +1,4 @@
 import datetime
-import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.express as px
 

@@ -1,4 +1,4 @@
-from core.time_series import TimeSeries
+from core.time_series import TimeSeries, merge_time_series
 import datetime
 import pandas as pd
 
@@ -48,3 +48,11 @@ class OHLC:
 	@property
 	def close(self):
 		return self.__close
+
+def merge_ohlcs(first, second):
+	assert(first.end + datetime.timedelta(days=1) == second.start)
+	return OHLC(pd.concat([first.dates, second.dates],
+				merge_time_series(first.open, second.open),
+				merge_time_series(first.high, second.high),
+				merge_time_series(first.low, second.low),
+				merge_time_series(first.close, second.close))

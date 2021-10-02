@@ -5,11 +5,12 @@ import pandas as pd
 class OHLC:
 	@classmethod
 	def empty(cls):
-		return cls(pd.date_range(start=datetime.datetime.now().date(), periods=0, freq='D'),
-				   self.__create_empty_time_series("Open", self.dates),
-				   self.__create_empty_time_series("High", self.dates),
-				   self.__create_empty_time_series("Low", self.dates),
-				   self.__create_empty_time_series("Close", self.dates))
+		dates = pd.date_range(start=datetime.datetime.now().date(), periods=0, freq='D')
+		return cls(dates,
+				   cls.__create_empty_time_series("Open", dates),
+				   cls.__create_empty_time_series("High", dates),
+				   cls.__create_empty_time_series("Low", dates),
+				   cls.__create_empty_time_series("Close", dates))
 
 	def __init__(self, dates, open, high, low, close):
 		self.__dates = pd.to_datetime(dates).dt.date

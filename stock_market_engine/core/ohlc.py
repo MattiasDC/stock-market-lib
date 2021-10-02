@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 class OHLC:
-	def __init(self):
+	def __init__(self):
 		self.__dates = pd.date_range(start=datetime.datetime.now().date(), periods=0, freq='D')
 		self.__open = self.__create_empty_time_series("Open", self.dates)
 		self.__high = self.__create_empty_time_series("High", self.dates)

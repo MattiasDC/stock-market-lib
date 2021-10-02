@@ -1,7 +1,7 @@
 from .core.signal.signal_sequence import SignalSequence
 
 class Engine:
-	def __init__(self, stock_market, signal_detectors):
+	def __init__(self, stock_market, stock_market_updater, signal_detectors):
 		self.__stock_market = stock_market
 		self.__stock_market_updater = stock_market_updater
 		self.__signal_detectors = signal_detectors
@@ -17,5 +17,5 @@ class Engine:
 		self.__stock_market
 		
 	@property
-	def signal_sequence(self):
-		return self.__signal_sequence
+	def signals(self):
+		return self.__signal_sequence.signals

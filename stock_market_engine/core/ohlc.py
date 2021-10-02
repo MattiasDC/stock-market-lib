@@ -3,15 +3,6 @@ import datetime
 import pandas as pd
 
 class OHLC:
-	@classmethod
-	def empty(cls):
-		dates = pd.date_range(start=datetime.datetime.now().date(), periods=0, freq='D')
-		return cls(dates,
-				   cls.__create_empty_time_series("Open", dates),
-				   cls.__create_empty_time_series("High", dates),
-				   cls.__create_empty_time_series("Low", dates),
-				   cls.__create_empty_time_series("Close", dates))
-
 	def __init__(self, dates, open, high, low, close):
 		self.__dates = pd.to_datetime(dates).dt.date
 		self.__open = TimeSeries("Open", pd.concat([self.dates, open], axis=1))
@@ -21,7 +12,7 @@ class OHLC:
 
 	@staticmethod
 	def __create_empty_time_series(name, dates):
-		return TimeSeries(name, pd.concat([dates, pd.DataFrame(pd.Series(dtype='float'))]))
+		return TimeSeries(name, pd.concat([dates, pd.DataFrame(pd.Series(dtype='float'))], axis=1))
 
 	@property
 	def start(self):

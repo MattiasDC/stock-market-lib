@@ -12,7 +12,7 @@ class TestOHLC(unittest.TestCase):
 						 self.raw_data.High,
 						 self.raw_data.Low,
 						 self.raw_data.Close)
-
+						 
 	def test_start(self):
 		self.assertEqual(dateparser.parse(self.raw_data["Date"].iloc[0]).date(), self.ohlc.start)
 

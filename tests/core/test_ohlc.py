@@ -1,7 +1,7 @@
 import dateparser
 import pandas as pd
 import unittest
-from core.ohlc import OHLC
+from stock_market_engine.core.ohlc import OHLC
 
 class TestOHLC(unittest.TestCase):
 

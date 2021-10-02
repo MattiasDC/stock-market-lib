@@ -1,4 +1,4 @@
-from core.time_series import TimeSeries, merge_time_series
+from .time_series import TimeSeries, merge_time_series
 import datetime
 import pandas as pd
 

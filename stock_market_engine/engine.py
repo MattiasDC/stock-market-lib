@@ -1,3 +1,4 @@
+from .core.signal.signal_sequence import SignalSequence
 
 class Engine:
 	def __init__(self, stock_market, signal_detectors):

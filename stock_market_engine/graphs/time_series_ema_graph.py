@@ -1,4 +1,4 @@
-from graphs.time_series_graph import TimeSeriesGraph
+from .time_series_graph import TimeSeriesGraph
 
 class TimeSeriesEMAGraph:
 	def __init__(self, time_series):

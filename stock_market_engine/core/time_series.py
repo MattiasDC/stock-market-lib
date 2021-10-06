@@ -65,6 +65,9 @@ class TimeSeries:
 	def ema(self, days):
 		return self.values.ewm(span=days).mean()
 
+	"""
+	Trims the series at the start of the series to keep \p days
+	"""
 	def trimmed_start(self, days):
 		return TimeSeries(self.name, self.time_values.loc[self.time_values.date >= self.end - datetime.timedelta(days=days)])
 

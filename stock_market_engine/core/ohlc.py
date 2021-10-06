@@ -38,6 +38,16 @@ class OHLC:
 	def close(self):
 		return self.__close
 
+	def trimmed_start(self, days):
+		assert(datetime.timedelta(days=days) < self.end - self.start)
+		new_open = self.open.trimmed_start(days)
+		return OHLC(new_open.dates,
+					new_open.values,
+					self.high.trimmed_start(days).values,
+					self.low.trimmed_start(days).values,
+					self.close.trimmed_start(days).values)
+
+
 def merge_ohlcs(first, second):
 	if first is None:
 		return second

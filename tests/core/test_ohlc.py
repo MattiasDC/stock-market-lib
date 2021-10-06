@@ -1,4 +1,5 @@
 import dateparser
+import datetime
 import pandas as pd
 import unittest
 from stock_market_engine.core.ohlc import OHLC
@@ -33,6 +34,12 @@ class TestOHLC(unittest.TestCase):
 
 	def test_close(self):
 		self.assertTrue((self.raw_data["Close"].values == self.ohlc.close.values).all())
+
+	def test_trimmed_start(self):
+		trimmed = self.ohlc.trimmed_start(10)
+		self.assertEqual(trimmed.end - trimmed.start, datetime.timedelta(days=10))
+		self.assertEqual(trimmed.end, self.ohlc.end)
+		self.assertEqual(trimmed.start, self.ohlc.end - datetime.timedelta(days=10))
 
 if __name__ == '__main__':
     unittest.main()

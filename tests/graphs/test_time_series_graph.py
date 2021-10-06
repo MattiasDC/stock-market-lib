@@ -1,7 +1,7 @@
 import pandas as pd
 import unittest
-from core.time_series import TimeSeries
-from graphs.time_series_graph import TimeSeriesGraph
+from stock_market_engine.core.time_series import TimeSeries
+from stock_market_engine.graphs.time_series_graph import TimeSeriesGraph
 
 class TestTimeSeriesGraph(unittest.TestCase):
 

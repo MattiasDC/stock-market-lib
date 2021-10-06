@@ -12,8 +12,8 @@ class Signal:
 	def date(self):
 		return self.__date
 
+	def __str__(self):
+		return f"{self.name} ({self.date})"
+
 	def __repr__(self):
 		return f"Signal({self.name}, {self.date})"
-
-	def __str__(self):
-		return self.__repr__()

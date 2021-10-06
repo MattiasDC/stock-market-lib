@@ -8,8 +8,6 @@ class TimeSeriesGraph:
 		self.__indicators = indicators
 
 	def show(self):
-		fig = plt.figure(self.__time_series.name)
-
 		x = pd.to_datetime(self.__time_series.dates)
 
 		columns = ["date", "value"]

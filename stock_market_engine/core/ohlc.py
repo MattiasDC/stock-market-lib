@@ -10,10 +10,6 @@ class OHLC:
 		self.__low = TimeSeries("Low", pd.concat([self.dates, low], axis=1))
 		self.__close = TimeSeries("Close", pd.concat([self.dates, close], axis=1))
 
-	@staticmethod
-	def __create_empty_time_series(name, dates):
-		return TimeSeries(name, pd.concat([dates, pd.DataFrame(pd.Series(dtype='float'))], axis=1))
-
 	@property
 	def start(self):
 		return self.__dates.iloc[0]

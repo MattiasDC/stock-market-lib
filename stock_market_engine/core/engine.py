@@ -1,4 +1,4 @@
-from .core.signal.signal_sequence import SignalSequence
+from .signal.signal_sequence import SignalSequence
 import datetime
 import pandas as pd
 

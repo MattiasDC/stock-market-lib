@@ -12,7 +12,7 @@ class TimeSeries:
 		self.__day_data.columns = ["date", "value"]
 		self.__day_data.date = pd.to_datetime(self.__day_data.iloc[:,0]).dt.date
 		assert(is_numeric_dtype(self.__day_data.value))
-		assert(self.start < self.end)
+		assert(self.start <= self.end)
 
 	@property
 	def name(self):

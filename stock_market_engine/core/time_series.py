@@ -60,10 +60,11 @@ class TimeSeries:
 		return relevant_values.ewm(span=len(relevant_values)).mean().iloc[-1]
 
 	def ma(self, days):
-		return self.values.rolling(days, min_periods=1).mean()
+		print(self.values.rolling(days, min_periods=1).mean())
+		return TimeSeries(f"ma{days} {self.name}", pd.concat([self.dates, self.values.rolling(days, min_periods=1).mean()], axis=1))
 
 	def ema(self, days):
-		return self.values.ewm(span=days).mean()
+		return TimeSeries(f"ema{days} {self.name}", pd.concat([self.dates, self.values.ewm(span=days).mean()], axis=1))
 
 	"""
 	Trims the series at the start of the series to keep \p days

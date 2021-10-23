@@ -1,4 +1,9 @@
+aioredis
 dateparser
+fastapi
+jsonpickle
 pandas
-plotly
+pydantic
+rich
+uvicorn
 yfinance

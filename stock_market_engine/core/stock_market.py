@@ -33,3 +33,9 @@ class StockMarket:
 		if not self.__ticker_OHLCs:
 			return self.start_date
 		return max(map(lambda ohlc: ohlc.end, self.__ticker_OHLCs.values()))
+
+	def __repr__(self):
+		return f"StockMarket({self.date}, {self.tickers})"
+
+	def __str__(self):
+		return self.__repr__()

@@ -6,3 +6,4 @@ class SignalDetectorFactory:
 			return MonthlySignalDetector()
 		elif config["name"] == "bimonthly":
 			return BiMonthlySignalDetector()
+		assert False, "Unsupported signal detector"

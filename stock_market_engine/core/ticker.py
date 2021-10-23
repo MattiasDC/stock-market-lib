@@ -14,3 +14,9 @@ class Ticker:
 
 	def __hash__(self):
 		return hash(self.__symbol)
+
+	def __repr__(self):
+		return f"Ticker({self.symbol})"
+
+	def __str__(self):
+		return self.__repr__()

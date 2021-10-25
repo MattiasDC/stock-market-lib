@@ -1,5 +1,5 @@
 from stock_market_engine.core.ohlc import OHLC, merge_ohlcs
-from stock_market_engine.core.stock_updater import StockUpdater
+from stock_market_engine.core.updater.stock_updater import StockUpdater
 from stock_market_engine.core.ticker_ohlc import TickerOHLC
 import datetime
 import yfinance as yf

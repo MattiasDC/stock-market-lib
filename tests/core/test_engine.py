@@ -8,7 +8,7 @@ from stock_market_engine.core.ticker import Ticker
 from stock_market_engine.core.signal.signal import Signal
 from stock_market_engine.core.signal.signal_detector import SignalDetector
 from stock_market_engine.core.stock_market import StockMarket
-from stock_market_engine.core.stock_updater import StockUpdater
+from stock_market_engine.core.updater.stock_updater import StockUpdater
 
 class DummyStockMarketUpdater(StockUpdater):
 	def __init__(self):

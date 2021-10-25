@@ -1,6 +1,6 @@
 import datetime
 import unittest
-from stock_market_engine.signals.fixed_interval_signal import FixedIntervalSignal
+from stock_market_engine.ext.signal.fixed_interval_signal import FixedIntervalSignal
 
 class TestFixedIntervalSignal(unittest.TestCase):
 						 

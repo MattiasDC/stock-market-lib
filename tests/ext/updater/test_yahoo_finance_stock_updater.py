@@ -2,7 +2,7 @@ import datetime
 import unittest
 from stock_market_engine.core.stock_market import StockMarket
 from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.updaters.yahoo_finance_stock_updater import YahooFinanceStockUpdater
+from stock_market_engine.ext.updater.yahoo_finance_stock_updater import YahooFinanceStockUpdater
 
 class TestYahooFinanceStockUpdater(unittest.TestCase):
 						 

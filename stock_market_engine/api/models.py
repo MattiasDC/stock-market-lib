@@ -7,8 +7,8 @@ from stock_market_engine.api.config import get_settings
 from stock_market_engine.core.engine import Engine
 from stock_market_engine.core.stock_market import StockMarket
 from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.signals.signal_detector_factory import SignalDetectorFactory
-from stock_market_engine.updaters.stock_updater_factory import StockUpdaterFactory
+from stock_market_engine.ext.signal.signal_detector_factory import SignalDetectorFactory
+from stock_market_engine.ext.updater.stock_updater_factory import StockUpdaterFactory
 
 class TickerModel(BaseModel):
 	symbol : constr(max_length=5)

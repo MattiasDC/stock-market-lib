@@ -4,7 +4,7 @@ import unittest
 from stock_market_engine.core.stock_market import StockMarket
 from stock_market_engine.core.ticker import Ticker
 from stock_market_engine.core.signal.signal_sequence import SignalSequence
-from stock_market_engine.signals.fixed_interval_signal import BiMonthlySignalDetector
+from stock_market_engine.ext.signal.fixed_interval_signal import BiMonthlySignalDetector
 
 class TestBiMonthlySignalDetector(unittest.TestCase):
 

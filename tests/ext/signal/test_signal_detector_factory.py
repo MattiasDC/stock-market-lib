@@ -1,8 +1,8 @@
 import datetime
 import unittest
-from stock_market_engine.signals.signal_detector_factory import SignalDetectorFactory
-from stock_market_engine.signals.fixed_interval_signal import BiMonthlySignalDetector
-from stock_market_engine.signals.fixed_interval_signal import MonthlySignalDetector
+from stock_market_engine.ext.signal.signal_detector_factory import SignalDetectorFactory
+from stock_market_engine.ext.signal.fixed_interval_signal import BiMonthlySignalDetector
+from stock_market_engine.ext.signal.fixed_interval_signal import MonthlySignalDetector
 
 class TestSignalDetectorFactory(unittest.TestCase):
 

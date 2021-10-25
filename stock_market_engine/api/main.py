@@ -4,9 +4,15 @@ from .models import EngineModel, TickerModel
 from stock_market_engine.api.redis import init_redis_pool
 from stock_market_engine.core.engine import Engine
 from stock_market_engine.core.ticker import Ticker
+from stock_market_engine.ext.signal.register import register_signal_detector_factories 
 import uuid
 
 app = FastAPI()
+
+def get_signal_detector_factory():
+	factory = SignalDetectorFactory()
+	register_signal_detector_factories(factory)
+	return factory
 
 @app.on_event("startup")
 async def startup_event():
@@ -14,7 +20,7 @@ async def startup_event():
 
 @app.post("/create")
 async def create_engine(engine_config: EngineModel):
-	engine = engine_config.create()
+	engine = engine_config.create(get_signal_detector_factory())
 	engine = json_decode(json_encode(engine), Engine)
 	random_id = str(uuid.uuid4())
 

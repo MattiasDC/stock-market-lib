@@ -27,14 +27,14 @@ class SignalModel(BaseModel):
 	name : str
 	config : Json
 
-	def create(self):
-		return SignalDetectorFactory().create(json.loads(self.json()))
+	def create(self, factory):
+		return factory.create(json.loads(self.json()))
 
 class SignalsModel(BaseModel):
 	signals: List[SignalModel]
 
-	def create(self):
-		return [signal_config.create() for signal_config in self.signals]
+	def create(self, factory):
+		return [signal_config.create(factory) for signal_config in self.signals]
 
 class EngineModel(BaseModel):
 	stock_market: StockMarketModel
@@ -43,8 +43,8 @@ class EngineModel(BaseModel):
 	def __create_stock_updater(self):
 		return StockUpdaterFactory().create(get_settings().stock_updater)
 	
-	def create(self):
+	def create(self, signal_detector_factory):
 		sm = self.stock_market.create()
-		signal_detectors = self.signals.create()
+		signal_detectors = self.signals.create(signal_detector_factory)
 		stock_updater = self.__create_stock_updater()
 		return 	Engine(sm, stock_updater, signal_detectors)

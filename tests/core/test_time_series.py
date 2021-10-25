@@ -60,5 +60,12 @@ class TestTimeSeries(unittest.TestCase):
 		self.assertEqual(trimmed_series.duration, datetime.timedelta(days=month_days))
 		self.assertEqual(trimmed_series.end, self.ts.end)
 
+	def test_eq(self):
+		self.assertEqual(self.ts, self.ts)
+		self.assertNotEqual(self.ts, 0)
+
+	def test_json(self):
+		self.assertEqual(self.ts, TimeSeries.from_json(self.ts.to_json()))
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,9 +1,9 @@
 aioredis
 dateparser
 fastapi
-jsonpickle
 pandas
 pydantic
 rich
+toolz
 uvicorn
 yfinance

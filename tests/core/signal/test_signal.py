@@ -15,5 +15,12 @@ class TestSignal(unittest.TestCase):
 	def test_date(self):
 		self.assertEqual(self.signal.date, self.date)
 
+	def test_eq(self):
+		self.assertEqual(self.signal, self.signal)
+		self.assertNotEqual(self.signal, 0)
+
+	def test_json(self):
+		self.assertEqual(self.signal, Signal.from_json(self.signal.to_json()))
+
 if __name__ == '__main__':
     unittest.main()

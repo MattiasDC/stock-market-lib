@@ -1,6 +1,7 @@
 import dateparser
 import datetime
 import functools
+import json
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 import string
@@ -60,7 +61,6 @@ class TimeSeries:
 		return relevant_values.ewm(span=len(relevant_values)).mean().iloc[-1]
 
 	def ma(self, days):
-		print(self.values.rolling(days, min_periods=1).mean())
 		return TimeSeries(f"ma{days} {self.name}", pd.concat([self.dates, self.values.rolling(days, min_periods=1).mean()], axis=1))
 
 	def ema(self, days):
@@ -72,7 +72,29 @@ class TimeSeries:
 	def trimmed_start(self, days):
 		return TimeSeries(self.name, self.time_values.loc[self.time_values.date >= self.end - datetime.timedelta(days=days)])
 
+	def __eq__(self, other):
+		if not isinstance(other, TimeSeries):
+			return False
+		if self.name != other.name:
+			return False
+		if not self.time_values.equals(other.time_values):
+			return False
+		return True
+
+	def __repr__(self):
+		if len(self.values) == 0:
+			return f"TimeSeries({self.name})"
+		return f"TimeSeries({self.name}, {self.dates.iloc[-1]})"
+
+	def to_json(self):
+		return json.dumps({"name" : self.name,
+						  "day_data" : self.time_values.to_json()})
+	@staticmethod
+	def from_json(json_str):
+		dict_obj = json.loads(json_str)
+		return TimeSeries(dict_obj["name"], pd.read_json(dict_obj["day_data"]))
+
 def merge_time_series(first, second):
-	assert(first.name == second.name)
-	assert(first.end + datetime.timedelta(days=1) == second.start)
+	assert first.name == second.name
+	assert (first.end + datetime.timedelta(days=1) == second.start) or second.start.weekday() == 0
 	return TimeSeries(first.name, pd.concat(first.__day_data, second.__day_data))

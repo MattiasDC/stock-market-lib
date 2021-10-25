@@ -1,7 +1,7 @@
 import dateparser
 import datetime
 import json
-from pydantic import BaseModel, Json
+from pydantic import BaseModel, Json, constr
 from typing import List
 from stock_market_engine.api.config import get_settings
 from stock_market_engine.core.engine import Engine
@@ -10,29 +10,35 @@ from stock_market_engine.core.ticker import Ticker
 from stock_market_engine.signals.signal_detector_factory import SignalDetectorFactory
 from stock_market_engine.updaters.stock_updater_factory import StockUpdaterFactory
 
-class StockMarketConfig(BaseModel):
-	start_date: datetime.date
-	tickers: List[str]
+class TickerModel(BaseModel):
+	symbol : constr(max_length=5)
 
 	def create(self):
-		return StockMarket(self.start_date, [Ticker(symbol) for symbol in self.tickers])
+		return Ticker(self.symbol)
 
-class SignalConfig(BaseModel):
+class StockMarketModel(BaseModel):
+	start_date: datetime.date
+	tickers: List[TickerModel]
+
+	def create(self):
+		return StockMarket(self.start_date, [ticker.create() for ticker in self.tickers])
+
+class SignalModel(BaseModel):
 	name : str
 	config : Json
 
 	def create(self):
-		SignalDetectorFactory().create(json.loads(self.json()))
+		return SignalDetectorFactory().create(json.loads(self.json()))
 
-class SignalsConfig(BaseModel):
-	signals: List[SignalConfig]
+class SignalsModel(BaseModel):
+	signals: List[SignalModel]
 
 	def create(self):
 		return [signal_config.create() for signal_config in self.signals]
 
-class EngineConfig(BaseModel):
-	stock_market: StockMarketConfig
-	signals: SignalsConfig
+class EngineModel(BaseModel):
+	stock_market: StockMarketModel
+	signals: SignalsModel
 
 	def __create_stock_updater(self):
 		return StockUpdaterFactory().create(get_settings().stock_updater)

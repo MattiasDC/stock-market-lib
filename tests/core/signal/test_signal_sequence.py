@@ -27,5 +27,18 @@ class TestSignalSequence(unittest.TestCase):
 		self.assertEqual(ss.signals_since(self.date - datetime.timedelta(days=1)), signals)
 		self.assertEqual(ss.signals_since(self.date), [self.signal3])
 
+	def test_eq(self):
+		self.assertEqual(SignalSequence(), SignalSequence())
+		signals = [self.signal, self.signal2, self.signal3]
+		ss = SignalSequence(signals)
+		self.assertEqual(ss, ss)
+		self.assertNotEqual(ss, SignalSequence())
+		self.assertNotEqual(ss, 0)
+
+	def test_json(self):
+		signals = [self.signal, self.signal2, self.signal3]
+		ss = SignalSequence(signals)
+		self.assertEqual(ss, SignalSequence.from_json(ss.to_json()))
+
 if __name__ == '__main__':
     unittest.main()

@@ -8,14 +8,14 @@ class YahooFinanceStockUpdater(StockUpdater):
 	def __init__(self):
 		super().__init__("Yahoo Finance stock updater")
 
-	def __get_period(self, stock_market, ohlc):
+	def __get_period(self, stock_market, ohlc, date):
 		start = ohlc.end + datetime.timedelta(days=1)
-		end = datetime.datetime.now().date()
+		end = date
 		return start, end
 
 	def __get_ohlc(self, start, end, ticker):
 		yticker = yf.Ticker(ticker.symbol)
-		ticker_hist = yticker.history(start=start, end=end, interval="1d")
+		ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
 		ticker_hist = ticker_hist.reset_index()
 		return OHLC(ticker_hist.Date,
 					ticker_hist.Open,
@@ -24,14 +24,15 @@ class YahooFinanceStockUpdater(StockUpdater):
 					ticker_hist.Close)
 
 	def update(self, date, stock_market):
+		date_exclusive = date + datetime.timedelta(days=1)
 		for ticker in stock_market.tickers:
 			ohlc = stock_market.ohlc(ticker)
 			if ohlc is None:
-				start = datetime.date(1970, 1, 1)
-				end = datetime.datetime.now().date()
+				start = stock_market.start_date
+				end = date_exclusive
 			else:
-				start, end = self.__get_period(stock_market, ohlc)
-			
+				start, end = self.__get_period(stock_market, ohlc, date_exclusive)
+
 			if start == end:
 				continue
 			assert(start < end)

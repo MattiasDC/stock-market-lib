@@ -41,5 +41,13 @@ class TestOHLC(unittest.TestCase):
 		self.assertEqual(trimmed.end, self.ohlc.end)
 		self.assertEqual(trimmed.start, self.ohlc.end - datetime.timedelta(days=10))
 
+
+	def test_eq(self):
+		self.assertEqual(self.ohlc, self.ohlc)
+		self.assertNotEqual(self.ohlc, 0)
+
+	def test_json(self):
+		self.assertEqual(self.ohlc, OHLC.from_json(self.ohlc.to_json()))
+
 if __name__ == '__main__':
     unittest.main()

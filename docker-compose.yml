@@ -7,11 +7,13 @@ services:
     command: [sh, -cx, "
       uvicorn stock_market_engine.api.main:app
       --host 0.0.0.0 --port 8000
-      --lifespan=on --use-colors --log-level debug"]
+      --lifespan=on --use-colors --log-level debug --reload"]
     ports:
       - 8000:8000
     depends_on:
       - redis
+    volumes:
+      - .:/app
       
   redis:
     container_name: redis

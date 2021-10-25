@@ -8,6 +8,7 @@ class Engine:
 		self.__stock_market_updater = stock_market_updater
 		self.__signal_detectors = signal_detectors
 		self.__signal_sequence = SignalSequence()
+		self.update(stock_market.date)
 
 	def update(self, date):
 		current_end = self.__stock_market.date

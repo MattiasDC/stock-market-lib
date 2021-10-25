@@ -1,6 +1,8 @@
+import json
 
 class Ticker:
-	def __init__(self, symbol):
+	def __init__(self, symbol: str):
+		assert len(symbol) < 5
 		self.__symbol = symbol
 
 	@property
@@ -18,5 +20,9 @@ class Ticker:
 	def __repr__(self):
 		return f"Ticker({self.symbol})"
 
-	def __str__(self):
-		return self.__repr__()
+	def to_json(self):
+		return json.dumps({"symbol" : self.symbol})
+
+	@staticmethod
+	def from_json(json_str):
+		return Ticker(**json.loads(json_str))

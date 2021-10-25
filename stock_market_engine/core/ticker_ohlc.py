@@ -11,3 +11,6 @@ class TickerOHLC:
 	@property
 	def ohlc(self):
 		return self.__ohlc
+
+	def __repr__(self):
+		return f"TickerOHLC({self.ticker}, {self.ohlc})"

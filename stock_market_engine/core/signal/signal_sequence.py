@@ -1,4 +1,5 @@
-from heapq import merge
+import json
+from .signal import Signal
 
 class SignalSequence:
 	def __init__(self, signals=None):
@@ -30,3 +31,15 @@ class SignalSequence:
 	def __repr__(self):
 		signals_string = ", ".join(map(repr, self.signals))
 		return f"SignalSequence({signals_string})"
+
+	def __eq__(self, other):
+		if not isinstance(other, SignalSequence):
+			return False
+		return self.signals == other.signals
+
+	def to_json(self):
+		return json.dumps([s.to_json() for s in self.signals])
+
+	@staticmethod
+	def from_json(json_str):
+		return SignalSequence([Signal.from_json(s) for s in json.loads(json_str)])

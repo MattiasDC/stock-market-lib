@@ -1,7 +1,7 @@
 import os
 from functools import cache
 from pydantic import AnyUrl, BaseSettings
-from .utils import get_logger
+from stock_market_engine.api.utils import get_logger
 
 logger = get_logger(__name__)
 

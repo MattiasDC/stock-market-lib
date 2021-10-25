@@ -1,4 +1,4 @@
-from .yahoo_finance_stock_updater import YahooFinanceStockUpdater
+from stock_market_engine.ext.updater.yahoo_finance_stock_updater import YahooFinanceStockUpdater
 
 class StockUpdaterFactory:
 	def create(self, config):

@@ -38,3 +38,6 @@ class YahooFinanceStockUpdater(StockUpdater):
 			assert(start < end)
 			new_ohlc = self.__get_ohlc(start, end, ticker)
 			stock_market.update_ticker(TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc)))
+
+	def __eq__(self, other):
+		return isinstance(other, YahooFinanceStockUpdater)

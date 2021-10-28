@@ -35,8 +35,8 @@ class TestOHLC(unittest.TestCase):
 	def test_close(self):
 		self.assertTrue((self.raw_data["Close"].values == self.ohlc.close.values).all())
 
-	def test_trimmed_start(self):
-		trimmed = self.ohlc.trimmed_start(10)
+	def test_keep_recent_days(self):
+		trimmed = self.ohlc.keep_recent_days(10)
 		self.assertEqual(trimmed.end - trimmed.start, datetime.timedelta(days=9))
 		self.assertEqual(trimmed.end, self.ohlc.end)
 		self.assertEqual(trimmed.start, self.ohlc.end - datetime.timedelta(days=9))

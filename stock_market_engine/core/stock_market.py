@@ -28,7 +28,7 @@ class StockMarket:
 
 		ohlc = ticker_OHLC.ohlc
 		if ohlc.start < self.start_date:
-			ohlc = ohlc.trimmed_start((ohlc.end - self.start_date).days + 1)
+			ohlc = ohlc.keep_recent_days((ohlc.end - self.start_date).days + 1)
 		assert(ohlc.start >= self.start_date)
 		self.__ticker_OHLCs[ticker_OHLC.ticker] = ohlc
 

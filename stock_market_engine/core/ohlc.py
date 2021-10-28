@@ -44,14 +44,14 @@ class OHLC:
 	def close(self):
 		return self.__close
 
-	def trimmed_start(self, days):
+	def keep_recent_days(self, days):
 		assert days < (self.end - self.start).days + 1
-		new_open = self.open.trimmed_start(days)
+		new_open = self.open.keep_recent_days(days)
 		return OHLC.from_series(new_open.dates,
 								new_open,
-								self.high.trimmed_start(days),
-								self.low.trimmed_start(days),
-								self.close.trimmed_start(days))
+								self.high.keep_recent_days(days),
+								self.low.keep_recent_days(days),
+								self.close.keep_recent_days(days))
 
 	def __eq__(self, other):
 		if not isinstance(other, OHLC):

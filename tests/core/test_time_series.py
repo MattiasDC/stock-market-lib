@@ -54,9 +54,9 @@ class TestTimeSeries(unittest.TestCase):
 		calculated_mean = self.ts.ma_at(self.ts.dates.iloc[-1], 2)
 		self.assertEqual(expected_mean, calculated_mean)
 
-	def test_trimmed_start(self):
+	def test_keep_recent_days(self):
 		month_days = 30
-		trimmed_series = self.ts.trimmed_start(month_days)
+		trimmed_series = self.ts.keep_recent_days(month_days)
 		self.assertEqual(trimmed_series.duration, datetime.timedelta(days=month_days-1))
 		self.assertEqual(trimmed_series.end, self.ts.end)
 

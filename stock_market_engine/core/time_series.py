@@ -69,7 +69,7 @@ class TimeSeries:
 	"""
 	Trims the series at the start of the series to keep \p days
 	"""
-	def trimmed_start(self, days):
+	def keep_recent_days(self, days):
 		return TimeSeries(self.name, self.time_values.loc[self.time_values.date > self.end - datetime.timedelta(days=days)])
 
 	def __eq__(self, other):

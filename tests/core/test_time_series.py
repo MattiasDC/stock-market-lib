@@ -57,7 +57,7 @@ class TestTimeSeries(unittest.TestCase):
 	def test_trimmed_start(self):
 		month_days = 30
 		trimmed_series = self.ts.trimmed_start(month_days)
-		self.assertEqual(trimmed_series.duration, datetime.timedelta(days=month_days))
+		self.assertEqual(trimmed_series.duration, datetime.timedelta(days=month_days-1))
 		self.assertEqual(trimmed_series.end, self.ts.end)
 
 	def test_eq(self):

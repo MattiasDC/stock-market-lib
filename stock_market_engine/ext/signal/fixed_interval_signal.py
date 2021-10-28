@@ -20,7 +20,8 @@ class FixedIntervalSignalFactory:
 
 class MonthlySignalDetector(SignalDetector):
 	def __init__(self):
-		super().__init__(FixedIntervalSignalFactory("monthly"))
+		name = "monthly"
+		super().__init__(name, FixedIntervalSignalFactory(name))
 
 	def detect(self, date, stock_market, sequence):
 		if date.day == 1:
@@ -31,7 +32,8 @@ class MonthlySignalDetector(SignalDetector):
 
 class BiMonthlySignalDetector(SignalDetector):
 	def __init__(self):
-		super().__init__(FixedIntervalSignalFactory("monthly"))
+		name = "bimonthly"
+		super().__init__(name, FixedIntervalSignalFactory(name))
 
 	def detect(self, date, stock_market, sequence):
 		if date.day == 1 or date.day == 15:

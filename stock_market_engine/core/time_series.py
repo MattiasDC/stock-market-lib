@@ -61,16 +61,16 @@ class TimeSeries:
 		return relevant_values.ewm(span=len(relevant_values)).mean().iloc[-1]
 
 	def ma(self, days):
-		return TimeSeries(f"ma{days} {self.name}", pd.concat([self.dates, self.values.rolling(days, min_periods=1).mean()], axis=1))
+		return TimeSeries(f"ma{days} {self.name}", pd.concat([self.dates, self.values.rolling(days, min_periods=1).mean()], axis=1, ignore_index=True))
 
 	def ema(self, days):
-		return TimeSeries(f"ema{days} {self.name}", pd.concat([self.dates, self.values.ewm(span=days).mean()], axis=1))
+		return TimeSeries(f"ema{days} {self.name}", pd.concat([self.dates, self.values.ewm(span=days).mean()], axis=1, ignore_index=True))
 
 	"""
 	Trims the series at the start of the series to keep \p days
 	"""
 	def trimmed_start(self, days):
-		return TimeSeries(self.name, self.time_values.loc[self.time_values.date >= self.end - datetime.timedelta(days=days)])
+		return TimeSeries(self.name, self.time_values.loc[self.time_values.date > self.end - datetime.timedelta(days=days)])
 
 	def __eq__(self, other):
 		if not isinstance(other, TimeSeries):
@@ -96,5 +96,5 @@ class TimeSeries:
 
 def merge_time_series(first, second):
 	assert first.name == second.name
-	assert (first.end + datetime.timedelta(days=1) == second.start) or second.start.weekday() == 0
-	return TimeSeries(first.name, pd.concat(first.__day_data, second.__day_data))
+	assert (first.end + datetime.timedelta(days=1) == second.start) or (second.start.weekday() == 0 and second.start > first.end)
+	return TimeSeries(first.name, pd.concat([first.time_values, second.time_values], ignore_index=True))

@@ -37,9 +37,9 @@ class TestOHLC(unittest.TestCase):
 
 	def test_trimmed_start(self):
 		trimmed = self.ohlc.trimmed_start(10)
-		self.assertEqual(trimmed.end - trimmed.start, datetime.timedelta(days=10))
+		self.assertEqual(trimmed.end - trimmed.start, datetime.timedelta(days=9))
 		self.assertEqual(trimmed.end, self.ohlc.end)
-		self.assertEqual(trimmed.start, self.ohlc.end - datetime.timedelta(days=10))
+		self.assertEqual(trimmed.start, self.ohlc.end - datetime.timedelta(days=9))
 
 
 	def test_eq(self):

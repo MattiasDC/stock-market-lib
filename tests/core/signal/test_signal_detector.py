@@ -12,10 +12,13 @@ class TestSignalDetector(unittest.TestCase):
 	def create(self, date):
 		return Signal(self.name, date)
 
+	def test_name(self):
+		self.assertEqual(SignalDetector(self.name, self).name, self.name)
+
 	def test_signal(self):
 		date = datetime.datetime.now().date()
 		signal_sequence = SignalSequence()
-		SignalDetector(self).signal(date, signal_sequence)
+		SignalDetector(self.name, self).signal(date, signal_sequence)
 		self.assertEqual(len(signal_sequence.signals), 1)
 		self.assertEqual(signal_sequence.signals[0].name, self.name)
 		self.assertEqual(signal_sequence.signals[0].date, date)

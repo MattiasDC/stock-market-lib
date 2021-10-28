@@ -28,7 +28,7 @@ class StockMarket:
 
 		ohlc = ticker_OHLC.ohlc
 		if ohlc.start < self.start_date:
-			ohlc = ohlc.trimmed_start((ohlc.end - self.start_date).days)
+			ohlc = ohlc.trimmed_start((ohlc.end - self.start_date).days + 1)
 		assert(ohlc.start >= self.start_date)
 		self.__ticker_OHLCs[ticker_OHLC.ticker] = ohlc
 
@@ -64,12 +64,12 @@ class StockMarket:
 	def to_json(self):
 		return json.dumps({"start_date" : json.dumps(self.start_date, default=datetime.date.isoformat),
 						   "tickers": json.dumps([ticker.to_json() for ticker in self.tickers]),
-						   "ticker_ohlcs" : json.dumps(self.__ticker_OHLCs)})
+						   "ticker_ohlcs" : json.dumps([(t.to_json(), ohlc.to_json()) for (t, ohlc) in self.__ticker_OHLCs.items()])})
 
 	@staticmethod
 	def from_json(json_str):
 		json_obj = json.loads(json_str)
 		sm = StockMarket(datetime.date.fromisoformat(json.loads(json_obj["start_date"])),
 						 [Ticker.from_json(ticker) for ticker in json.loads(json_obj["tickers"])])
-		sm.__ticker_OHLCs = json.loads(json_obj["ticker_ohlcs"])
+		sm.__ticker_OHLCs = {Ticker.from_json(t) : OHLC.from_json(o) for t, o in json.loads(json_obj["ticker_ohlcs"])}
 		return sm

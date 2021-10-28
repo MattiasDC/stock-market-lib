@@ -1,12 +1,12 @@
 from stock_market_engine.core.ohlc import OHLC, merge_ohlcs
-from stock_market_engine.core.updater.stock_updater import StockUpdater
+from stock_market_engine.core.stock_updater import StockUpdater
 from stock_market_engine.core.ticker_ohlc import TickerOHLC
 import datetime
 import yfinance as yf
 
 class YahooFinanceStockUpdater(StockUpdater):
 	def __init__(self):
-		super().__init__("Yahoo Finance stock updater")
+		super().__init__("yahoo")
 
 	def __get_period(self, stock_market, ohlc, date):
 		start = ohlc.end + datetime.timedelta(days=1)
@@ -17,6 +17,8 @@ class YahooFinanceStockUpdater(StockUpdater):
 		yticker = yf.Ticker(ticker.symbol)
 		ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
 		ticker_hist = ticker_hist.reset_index()
+		if len(ticker_hist.Date) == 0:
+			return None
 		return OHLC(ticker_hist.Date,
 					ticker_hist.Open,
 					ticker_hist.High,
@@ -35,9 +37,10 @@ class YahooFinanceStockUpdater(StockUpdater):
 
 			if start == end:
 				continue
-			assert(start < end)
+			assert start < end
 			new_ohlc = self.__get_ohlc(start, end, ticker)
-			stock_market.update_ticker(TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc)))
+			if new_ohlc is not None:
+				stock_market.update_ticker(TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc)))
 
 	def __eq__(self, other):
 		return isinstance(other, YahooFinanceStockUpdater)

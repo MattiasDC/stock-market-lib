@@ -7,8 +7,6 @@ from stock_market_engine.api.config import get_settings
 from stock_market_engine.core.engine import Engine
 from stock_market_engine.core.stock_market import StockMarket
 from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.ext.signal.signal_detector_factory import SignalDetectorFactory
-from stock_market_engine.ext.updater.stock_updater_factory import StockUpdaterFactory
 
 class TickerModel(BaseModel):
 	symbol : constr(max_length=5)
@@ -40,11 +38,8 @@ class EngineModel(BaseModel):
 	stock_market: StockMarketModel
 	signals: SignalsModel
 
-	def __create_stock_updater(self):
-		return StockUpdaterFactory().create(get_settings().stock_updater)
-	
-	def create(self, signal_detector_factory):
+	def create(self, stock_updater_factory, signal_detector_factory):
 		sm = self.stock_market.create()
 		signal_detectors = self.signals.create(signal_detector_factory)
-		stock_updater = self.__create_stock_updater()
-		return 	Engine(sm, stock_updater, signal_detectors)
+		stock_updater = stock_updater_factory.create({"name" : get_settings().stock_updater})
+		return Engine(sm, stock_updater, signal_detectors)

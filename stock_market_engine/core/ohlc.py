@@ -7,10 +7,10 @@ import toolz
 class OHLC:
 	def __init__(self, dates, open, high, low, close):
 		dates = pd.to_datetime(dates).dt.date
-		self.__open = TimeSeries("Open", pd.concat([dates, open], axis=1))
-		self.__high = TimeSeries("High", pd.concat([dates, high], axis=1))
-		self.__low = TimeSeries("Low", pd.concat([dates, low], axis=1))
-		self.__close = TimeSeries("Close", pd.concat([dates, close], axis=1))
+		self.__open = TimeSeries("Open", pd.concat([dates, open], axis=1, ignore_index=True))
+		self.__high = TimeSeries("High", pd.concat([dates, high], axis=1, ignore_index=True))
+		self.__low = TimeSeries("Low", pd.concat([dates, low], axis=1, ignore_index=True))
+		self.__close = TimeSeries("Close", pd.concat([dates, close], axis=1, ignore_index=True))
 
 	@staticmethod
 	def from_series(dates, open, high, low, close):
@@ -45,13 +45,13 @@ class OHLC:
 		return self.__close
 
 	def trimmed_start(self, days):
-		assert(datetime.timedelta(days=days) < self.end - self.start)
+		assert days < (self.end - self.start).days + 1
 		new_open = self.open.trimmed_start(days)
-		return OHLC(new_open.dates,
-					new_open.values,
-					self.high.trimmed_start(days).values,
-					self.low.trimmed_start(days).values,
-					self.close.trimmed_start(days).values)
+		return OHLC.from_series(new_open.dates,
+								new_open,
+								self.high.trimmed_start(days),
+								self.low.trimmed_start(days),
+								self.close.trimmed_start(days))
 
 	def __eq__(self, other):
 		if not isinstance(other, OHLC):
@@ -81,9 +81,9 @@ def merge_ohlcs(first, second):
 	if first is None:
 		return second
 	assert second is not None
-	assert (first.end + datetime.timedelta(days=1) == second.start) or second.start.weekday() == 0
-	return OHLC(pd.concat([first.dates, second.dates]),
-				merge_time_series(first.open, second.open),
-				merge_time_series(first.high, second.high),
-				merge_time_series(first.low, second.low),
-				merge_time_series(first.close, second.close))
+	assert (first.end + datetime.timedelta(days=1) == second.start) or (second.start.weekday() == 0 and second.start > first.end)
+	return OHLC.from_series(pd.concat([first.dates, second.dates], ignore_index=True),
+							merge_time_series(first.open, second.open),
+							merge_time_series(first.high, second.high),
+							merge_time_series(first.low, second.low),
+							merge_time_series(first.close, second.close))

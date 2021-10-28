@@ -12,14 +12,10 @@ import uuid
 app = FastAPI()
 
 def get_signal_detector_factory():
-	factory = Factory()
-	register_signal_detector_factories(factory)
-	return factory
+	return register_signal_detector_factories(Factory())
 
 def get_stock_updater_factory():
-	factory = Factory()
-	register_stock_updater_factories(factory)
-	return factory
+	return register_stock_updater_factories(Factory())
 
 @app.on_event("startup")
 async def startup_event():

@@ -6,6 +6,7 @@ class Factory:
 	def register(self, name, creator):
 		assert name not in self.creator_map, str((self.creator_map, name))
 		self.creator_map[name] = creator
+		return self
 
 	def create(self, config):
 		assert config['name'] in self.creator_map, str((self.creator_map, config["name"]))

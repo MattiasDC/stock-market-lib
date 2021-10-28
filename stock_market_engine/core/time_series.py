@@ -7,7 +7,7 @@ from pandas.api.types import is_numeric_dtype
 import string
 
 class TimeSeries:
-	def __init__(self, name, day_data):
+	def __init__(self, name: str, day_data: pd.DataFrame):
 		self.__name = name
 		self.__day_data = day_data.copy()
 		self.__day_data.columns = ["date", "value"]
@@ -43,29 +43,6 @@ class TimeSeries:
 	def time_values(self):
 		return self.__day_data
 
-	def ma_at(self, date, days):
-		assert(days > 1)
-		begin_date = date - datetime.timedelta(days=days-1)
-		assert(date <= self.end)
-		return self.time_values.loc[
-			(self.time_values.date >= begin_date) &
-			(self.time_values.date <= date)].value.mean()
-
-	def ema_at(self, date, days):
-		assert(days > 1)
-		begin_date = date - datetime.timedelta(days=days-1)
-		assert(date <= self.end)
-		relevant_values = self.time_values.loc[
-			(self.time_values.date >= begin_date) &
-			(self.time_values.date <= date)].value
-		return relevant_values.ewm(span=len(relevant_values)).mean().iloc[-1]
-
-	def ma(self, days):
-		return TimeSeries(f"ma{days} {self.name}", pd.concat([self.dates, self.values.rolling(days, min_periods=1).mean()], axis=1, ignore_index=True))
-
-	def ema(self, days):
-		return TimeSeries(f"ema{days} {self.name}", pd.concat([self.dates, self.values.ewm(span=days).mean()], axis=1, ignore_index=True))
-
 	"""
 	Trims the series at the start of the series to keep \p days
 	"""
@@ -81,8 +58,11 @@ class TimeSeries:
 			return False
 		return True
 
+	def __len__(self):
+		return len(self.values)
+
 	def __repr__(self):
-		if len(self.values) == 0:
+		if len(self) == 0:
 			return f"TimeSeries({self.name})"
 		return f"TimeSeries({self.name}, {self.dates.iloc[-1]})"
 

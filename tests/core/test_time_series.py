@@ -34,26 +34,6 @@ class TestTimeSeries(unittest.TestCase):
 		data.Date = pd.to_datetime(data.Date).dt.date
 		self.assertTrue((data.values == self.ts.time_values.values).all())
 
-	def test_ma_normal(self):
-		days = 4
-		first_non_include_day = self.ts.start + datetime.timedelta(days=20)
-		last_day = first_non_include_day + datetime.timedelta(days=days)
-		expected_mean = self.ts.time_values[
-			(self.ts.time_values.date <= last_day) &
-			(self.ts.time_values.date > first_non_include_day)].value.mean()
-		calculated_mean = self.ts.ma_at(last_day, days)
-		self.assertEqual(expected_mean, calculated_mean)
-
-	def test_ma_begin(self):
-		expected_mean = self.ts.values.iloc[0:2].mean()
-		calculated_mean = self.ts.ma_at(self.ts.dates.iloc[1], 4)
-		self.assertEqual(expected_mean, calculated_mean)
-
-	def test_ma_end(self):
-		expected_mean = self.ts.values.iloc[[-1, -2]].mean()
-		calculated_mean = self.ts.ma_at(self.ts.dates.iloc[-1], 2)
-		self.assertEqual(expected_mean, calculated_mean)
-
 	def test_keep_recent_days(self):
 		month_days = 30
 		trimmed_series = self.ts.keep_recent_days(month_days)
@@ -63,6 +43,10 @@ class TestTimeSeries(unittest.TestCase):
 	def test_eq(self):
 		self.assertEqual(self.ts, self.ts)
 		self.assertNotEqual(self.ts, 0)
+
+	def test_len(self):
+		series = TimeSeries("dummy", pd.DataFrame(data=[[datetime.date(2020, 1, 1), 0], [datetime.date(2020,1,2), 10]]))
+		self.assertEqual(len(series), 2)
 
 	def test_json(self):
 		self.assertEqual(self.ts, TimeSeries.from_json(self.ts.to_json()))

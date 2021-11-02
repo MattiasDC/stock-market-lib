@@ -5,14 +5,13 @@ RUN mkdir -p /app
 # set working directory
 WORKDIR /app
 
-# add requirements (to leverage Docker cache)
-COPY ./requirements.txt ./
+COPY pyproject.toml .
+COPY setup.cfg .
 
-RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN python -m pip install --no-cache-dir --upgrade pip
 
-ENV PYTHONPATH="${PYTHONPATH}:/app"
+COPY . .
+RUN pip install .
 
 EXPOSE 8000
-COPY . .
 CMD ["uvicorn", "stock_market_engine.api.main:app", "--host", "0.0.0.0", "--lifespan=on", "--use-colors", "--reload"]

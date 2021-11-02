@@ -3,10 +3,10 @@ from fastapi import FastAPI, Request
 from .models import EngineModel, TickerModel
 from stock_market_engine.api.redis import init_redis_pool
 from stock_market_engine.common.factory import Factory
-from stock_market_engine.core.engine import Engine
-from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.ext.signal.register import register_signal_detector_factories 
-from stock_market_engine.ext.updater.register import register_stock_updater_factories 
+from stock_market_engine.core import Engine
+from stock_market_engine.core import Ticker
+from stock_market_engine.ext.signal import register_signal_detector_factories 
+from stock_market_engine.ext.updater import register_stock_updater_factories 
 import uuid
 
 app = FastAPI()

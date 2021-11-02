@@ -4,9 +4,9 @@ import json
 from pydantic import BaseModel, Json, constr
 from typing import List
 from stock_market_engine.api.config import get_settings
-from stock_market_engine.core.engine import Engine
-from stock_market_engine.core.stock_market import StockMarket
-from stock_market_engine.core.ticker import Ticker
+from stock_market_engine.core import Engine
+from stock_market_engine.core import StockMarket
+from stock_market_engine.core import Ticker
 
 class TickerModel(BaseModel):
 	symbol : constr(max_length=5)

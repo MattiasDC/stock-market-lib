@@ -1,5 +1,5 @@
 import unittest
-from stock_market_engine.core.stock_updater import StockUpdater
+from stock_market_engine.core import StockUpdater
 
 class TestStockUpdater(unittest.TestCase):
 						 

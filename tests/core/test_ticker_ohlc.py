@@ -1,8 +1,8 @@
 import unittest
 import pandas as pd
-from stock_market_engine.core.ticker_ohlc import TickerOHLC
-from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.core.ohlc import OHLC
+from stock_market_engine.core import TickerOHLC
+from stock_market_engine.core import Ticker
+from stock_market_engine.core import OHLC
 
 class TestTickerOHLC(unittest.TestCase):
 			

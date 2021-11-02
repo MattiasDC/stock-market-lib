@@ -1,17 +1,17 @@
 import datetime
 import pandas as pd
 import unittest
-from stock_market_engine.core.engine import Engine
-from stock_market_engine.core.ohlc import OHLC
-from stock_market_engine.core.ticker_ohlc import TickerOHLC
-from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.core.signal.signal import Signal
-from stock_market_engine.core.signal.signal_detector import SignalDetector
-from stock_market_engine.core.stock_market import StockMarket
-from stock_market_engine.core.stock_updater import StockUpdater
+from stock_market_engine.core import Engine
+from stock_market_engine.core import OHLC
+from stock_market_engine.core import TickerOHLC
+from stock_market_engine.core import Ticker
+from stock_market_engine.core import Signal
+from stock_market_engine.core import SignalDetector
+from stock_market_engine.core import StockMarket
+from stock_market_engine.core import StockUpdater
 from stock_market_engine.common.factory import Factory
-from stock_market_engine.ext.signal.register import register_signal_detector_factories 
-from stock_market_engine.ext.updater.register import register_stock_updater_factories 
+from stock_market_engine.ext.signal import register_signal_detector_factories 
+from stock_market_engine.ext.updater import register_stock_updater_factories 
 
 class DummyStockMarketUpdater(StockUpdater):
 	def __init__(self):

@@ -3,7 +3,7 @@ import datetime
 import functools
 import pandas as pd
 import unittest
-from stock_market_engine.core.time_series import TimeSeries
+from stock_market_engine.core import TimeSeries
 
 class TestTimeSeries(unittest.TestCase):
 

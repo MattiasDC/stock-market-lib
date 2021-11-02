@@ -1,5 +1,5 @@
-from stock_market_engine.core.time_series import TimeSeries
-from stock_market_engine.ext.indicator.exponential_moving_average import ExponentialMovingAverage
+from stock_market_engine.core import TimeSeries
+from stock_market_engine.ext.indicator import ExponentialMovingAverage
 import datetime
 import pandas as pd
 import unittest

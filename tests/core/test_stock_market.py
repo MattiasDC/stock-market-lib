@@ -1,10 +1,10 @@
 import datetime
 import pandas as pd
 import unittest
-from stock_market_engine.core.ohlc import OHLC
-from stock_market_engine.core.ticker import Ticker
-from stock_market_engine.core.ticker_ohlc import TickerOHLC
-from stock_market_engine.core.stock_market import StockMarket
+from stock_market_engine.core import OHLC
+from stock_market_engine.core import Ticker
+from stock_market_engine.core import TickerOHLC
+from stock_market_engine.core import StockMarket
 
 class TestStockMarket(unittest.TestCase):
 

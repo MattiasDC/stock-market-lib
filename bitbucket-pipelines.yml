@@ -9,6 +9,6 @@ pipelines:
             - echo $BITBUCKET_REPO_SLUG
             - docker login -u $CANISTER_USERNAME -p $CANISTER_PASSWORD cloud.canister.io:5000
             - docker build -t cloud.canister.io:5000/$CANISTER_USERNAME/$BITBUCKET_REPO_SLUG:$BITBUCKET_TAG .
-            - docker push cloud.canister.io:5000/$CANISTER_USERNAME/$BITBUCKET_REPO_SLUG
+            - docker push cloud.canister.io:5000/$CANISTER_USERNAME/$BITBUCKET_REPO_SLUG:$BITBUCKET_TAG
 options:
   docker: true

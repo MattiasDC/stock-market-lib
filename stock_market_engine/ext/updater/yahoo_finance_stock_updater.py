@@ -2,6 +2,7 @@ from stock_market_engine.core.ohlc import OHLC, merge_ohlcs
 from stock_market_engine.core.stock_updater import StockUpdater
 from stock_market_engine.core.ticker_ohlc import TickerOHLC
 import datetime
+import json
 import yfinance as yf
 
 class YahooFinanceStockUpdater(StockUpdater):
@@ -19,7 +20,7 @@ class YahooFinanceStockUpdater(StockUpdater):
 		try:
 			ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
 			ticker_hist = ticker_hist.reset_index()
-		except JSONDecodeError:
+		except json.JSONDecodeError:
 			return None
 			
 		if len(ticker_hist.Date) == 0:

@@ -2,7 +2,7 @@ import json
 
 class Ticker:
 	def __init__(self, symbol: str):
-		assert len(symbol) < 5
+		assert len(symbol) <= 10
 		self.__symbol = symbol
 
 	@property

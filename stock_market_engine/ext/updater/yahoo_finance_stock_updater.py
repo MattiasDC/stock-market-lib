@@ -15,8 +15,13 @@ class YahooFinanceStockUpdater(StockUpdater):
 
 	def __get_ohlc(self, start, end, ticker):
 		yticker = yf.Ticker(ticker.symbol)
-		ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
-		ticker_hist = ticker_hist.reset_index()
+		ticker_hist = None
+		try:
+			ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
+			ticker_hist = ticker_hist.reset_index()
+		except JSONDecodeError:
+			return None
+			
 		if len(ticker_hist.Date) == 0:
 			return None
 		return OHLC(ticker_hist.Date,

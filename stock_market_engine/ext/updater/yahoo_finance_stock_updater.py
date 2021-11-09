@@ -1,10 +1,13 @@
 from stock_market_engine.core.ohlc import OHLC, merge_ohlcs
 from stock_market_engine.core.stock_updater import StockUpdater
 from stock_market_engine.core.ticker_ohlc import TickerOHLC
+from stock_market_engine.common.logging import get_logger
 
 import datetime
 import json
 import yahoo_fin.stock_info as yf
+
+logger = get_logger(__name__)
 
 class YahooFinanceStockUpdater(StockUpdater):
 	def __init__(self):
@@ -16,9 +19,14 @@ class YahooFinanceStockUpdater(StockUpdater):
 		return start, end
 
 	def __get_ohlc(self, start, end, ticker):
-		ticker_hist = yf.get_data(ticker.symbol, start_date=start, end_date=end, interval="1d", index_as_date=False)
-		ticker_hist = ticker_hist.reset_index()
-			
+		ticker_hist = None
+		try:
+			ticker_hist = yf.get_data(ticker.symbol, start_date=start, end_date=end, interval="1d", index_as_date=False)
+			ticker_hist = ticker_hist.reset_index()
+		except json.JSONDecodeError:
+			logger.warning("Yahoo Finance rate limit encountered!")
+			return None
+
 		if len(ticker_hist.date) == 0:
 			return None
 		return OHLC(ticker_hist.date,

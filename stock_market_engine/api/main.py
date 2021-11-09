@@ -38,6 +38,11 @@ async def get_date(engine_id : uuid.UUID):
 	engine = await get_engine(engine_id)
 	return engine.stock_market.date
 
+@app.get("/getstartdate/{engine_id}")
+async def get_start_date(engine_id : uuid.UUID):
+	engine = await get_engine(engine_id)
+	return engine.stock_market.start_date
+
 async def storeTemporary(o, redis):
 	random_id = str(uuid.uuid4())
 	o_json = o.to_json() if o is not None else "__NONE"

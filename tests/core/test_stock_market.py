@@ -46,6 +46,7 @@ class TestStockMarket(unittest.TestCase):
 
 	def test_json(self):
 		sm = StockMarket(self.date, [self.spy])
+		sm.update_ticker(TickerOHLC(self.spy, self.ohlc))
 		self.assertEqual(sm, StockMarket.from_json(sm.to_json()))
 
 if __name__ == '__main__':

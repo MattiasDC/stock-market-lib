@@ -1,13 +1,10 @@
 from stock_market_engine.core.ohlc import OHLC, merge_ohlcs
 from stock_market_engine.core.stock_updater import StockUpdater
 from stock_market_engine.core.ticker_ohlc import TickerOHLC
-from stock_market_engine.common.logging import get_logger
 
 import datetime
 import json
-import yfinance as yf
-
-logger = get_logger(__name__)
+import yahoo_fin.stock_info as yf
 
 class YahooFinanceStockUpdater(StockUpdater):
 	def __init__(self):
@@ -19,22 +16,16 @@ class YahooFinanceStockUpdater(StockUpdater):
 		return start, end
 
 	def __get_ohlc(self, start, end, ticker):
-		yticker = yf.Ticker(ticker.symbol)
-		ticker_hist = None
-		try:
-			ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
-			ticker_hist = ticker_hist.reset_index()
-		except json.JSONDecodeError as e:
-			logger.warning(f"Error occurred during Yahoo stock info update: {e}")
-			return None
+		ticker_hist = yf.get_data(ticker.symbol, start_date=start, end_date=end, interval="1d", index_as_date=False)
+		ticker_hist = ticker_hist.reset_index()
 			
-		if len(ticker_hist.Date) == 0:
+		if len(ticker_hist.date) == 0:
 			return None
-		return OHLC(ticker_hist.Date,
-					ticker_hist.Open,
-					ticker_hist.High,
-					ticker_hist.Low,
-					ticker_hist.Close)
+		return OHLC(ticker_hist.date,
+					ticker_hist.open,
+					ticker_hist.high,
+					ticker_hist.low,
+					ticker_hist.adjclose)
 
 	def update(self, date, stock_market):
 		date_exclusive = date + datetime.timedelta(days=1)

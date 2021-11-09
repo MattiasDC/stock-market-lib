@@ -13,6 +13,8 @@ class Engine:
 
 	def update(self, date):
 		current_end = self.__stock_market.date
+		if date <= current_end:
+			return
 		self.__stock_market_updater.update(date, self.__stock_market)
 		for date in pd.date_range(current_end + datetime.timedelta(days=1), date + datetime.timedelta(days=1)):
 			for detector in self.__signal_detectors:

@@ -1,9 +1,13 @@
 from stock_market_engine.core.ohlc import OHLC, merge_ohlcs
 from stock_market_engine.core.stock_updater import StockUpdater
 from stock_market_engine.core.ticker_ohlc import TickerOHLC
+from stock_market_engine.common.logging import get_logger
+
 import datetime
 import json
 import yfinance as yf
+
+logger = get_logger(__name__)
 
 class YahooFinanceStockUpdater(StockUpdater):
 	def __init__(self):
@@ -20,7 +24,8 @@ class YahooFinanceStockUpdater(StockUpdater):
 		try:
 			ticker_hist = yticker.history(start=start, end=end, interval="1d", auto_adjust=True)
 			ticker_hist = ticker_hist.reset_index()
-		except json.JSONDecodeError:
+		except json.JSONDecodeError as e:
+			logger.warning(f"Error occurred during Yahoo stock info update: {e}")
 			return None
 			
 		if len(ticker_hist.Date) == 0:

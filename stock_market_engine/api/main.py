@@ -1,5 +1,5 @@
 import datetime
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from http import HTTPStatus
 import uuid
 
@@ -63,7 +63,7 @@ async def get_ticker_data_id(engine_id : uuid.UUID, ticker_id : str):
 	ohlc = engine.stock_market.ohlc(Ticker(ticker_id))
 	random_id = await storeTemporary(ohlc, app.state.redis)
 	if random_id is None:
-		return HTTPStatus.NO_CONTENT
+		return Response(status_code=HTTPStatus.NO_CONTENT.value)
 	return random_id
 
 @app.get("/signals/{engine_id}")
@@ -71,7 +71,7 @@ async def get_signals_id(engine_id : uuid.UUID):
 	engine = await get_engine(engine_id)
 	random_id = await storeTemporary(engine.signals, app.state.redis)
 	if random_id is None:
-		return HTTPStatus.NO_CONTENT
+		return Response(status_code=HTTPStatus.NO_CONTENT.value)
 	return random_id
 
 @app.post("/update/{engine_id}")

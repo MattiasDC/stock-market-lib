@@ -1,5 +1,8 @@
 import datetime
 from fastapi import FastAPI, Request
+from http import HTTPStatus
+import uuid
+
 from .models import EngineModel, TickerModel
 from stock_market_engine.api.redis import init_redis_pool
 from stock_market_engine.common.factory import Factory
@@ -7,7 +10,6 @@ from stock_market_engine.core import Engine
 from stock_market_engine.core import Ticker
 from stock_market_engine.ext.signal import register_signal_detector_factories 
 from stock_market_engine.ext.updater import register_stock_updater_factories 
-import uuid
 
 app = FastAPI()
 
@@ -44,9 +46,10 @@ async def get_start_date(engine_id : uuid.UUID):
 	return engine.stock_market.start_date
 
 async def storeTemporary(o, redis):
+	if o is None:
+		return None
 	random_id = str(uuid.uuid4())
-	o_json = o.to_json() if o is not None else "__NONE"
-	await app.state.redis.set(random_id, o_json, datetime.timedelta(minutes=1))
+	await app.state.redis.set(random_id, o.to_json(), datetime.timedelta(minutes=60))
 	return random_id
 
 @app.get("/tickers/{engine_id}")
@@ -59,12 +62,16 @@ async def get_ticker_data_id(engine_id : uuid.UUID, ticker_id : str):
 	engine = await get_engine(engine_id)
 	ohlc = engine.stock_market.ohlc(Ticker(ticker_id))
 	random_id = await storeTemporary(ohlc, app.state.redis)
+	if random_id is None:
+		return HTTPStatus.NO_CONTENT
 	return random_id
 
 @app.get("/signals/{engine_id}")
 async def get_signals_id(engine_id : uuid.UUID):
 	engine = await get_engine(engine_id)
 	random_id = await storeTemporary(engine.signals, app.state.redis)
+	if random_id is None:
+		return HTTPStatus.NO_CONTENT
 	return random_id
 
 @app.post("/update/{engine_id}")

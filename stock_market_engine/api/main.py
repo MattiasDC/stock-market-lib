@@ -49,6 +49,11 @@ async def storeTemporary(o, redis):
 	await app.state.redis.set(random_id, o_json, datetime.timedelta(minutes=1))
 	return random_id
 
+@app.get("/tickers/{engine_id}")
+async def get_tickers(engine_id : uuid.UUID):
+	engine = await get_engine(engine_id)
+	return [ticker.symbol for ticker in engine.stock_market.tickers]
+
 @app.get("/ticker/{engine_id}/{ticker_id}")
 async def get_ticker_data_id(engine_id : uuid.UUID, ticker_id : str):
 	engine = await get_engine(engine_id)

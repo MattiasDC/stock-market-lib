@@ -29,6 +29,8 @@ class YahooFinanceStockUpdater(StockUpdater):
 		except AssertionError:
 			logger.warning("No data could be retrieved for ({start},{end})!")
 			return None
+		except KeyError: # Occurs when no data could be retrieved for the interval (e.g. only weekend interval, bug in yahoo_fin)
+			return None
 
 		if len(ticker_hist.date) == 0:
 			return None

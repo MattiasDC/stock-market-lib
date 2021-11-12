@@ -56,9 +56,6 @@ class YahooFinanceStockUpdater(StockUpdater):
 			new_ohlc = self.__get_ohlc(start, end, ticker)
 			if new_ohlc is not None:
 				stock_market = stock_market.update_ticker(TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc)))
-			else:
-				assert ohlc is not None
-				assert stock_market.ohlc(ticker) is not None
 		return stock_market
 
 	def __eq__(self, other):

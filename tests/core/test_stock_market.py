@@ -33,6 +33,12 @@ class TestStockMarket(unittest.TestCase):
 		self.assertTrue(qqq in new_sm.tickers)
 		self.assertFalse(qqq in sm.tickers)
 
+	def test_remove_ticker(self):
+		sm = StockMarket(self.date, [self.spy])
+		self.assertTrue(self.spy in sm.tickers)
+		new_sm = sm.remove_ticker(self.spy)
+		self.assertFalse(self.spy in new_sm.tickers)
+
 	def test_ohlc_and_update_ticker(self):
 		sm = StockMarket(self.date, [self.spy])
 		self.assertEqual(sm.ohlc(self.spy), None)

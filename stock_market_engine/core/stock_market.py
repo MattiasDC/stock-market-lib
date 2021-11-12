@@ -28,6 +28,13 @@ class StockMarket:
 		assert ticker not in self.tickers
 		return StockMarket(self.start_date, self.tickers + [ticker], self.__ticker_OHLCs)
 
+	def remove_ticker(self, ticker):
+		if ticker not in self.tickers:
+			return self
+		return StockMarket(self.start_date,
+						   [ t for t in self.tickers if t != ticker],
+						   { (k, v) for k,v in self.__ticker_OHLCs if k != ticker})
+
 	def update_ticker(self, ticker_OHLC):
 		assert(ticker_OHLC.ticker in self.tickers)
 		if ticker_OHLC.ohlc.end < self.start_date:

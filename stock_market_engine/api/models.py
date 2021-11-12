@@ -9,7 +9,7 @@ from stock_market_engine.core import StockMarket
 from stock_market_engine.core import Ticker
 
 class TickerModel(BaseModel):
-	symbol : constr(max_length=get_settings().max_ticker_symbollength)
+	symbol : constr(max_length=get_settings().max_ticker_symbol_length)
 
 	def create(self):
 		return Ticker(self.symbol)

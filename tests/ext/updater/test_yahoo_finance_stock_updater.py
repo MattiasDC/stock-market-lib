@@ -10,7 +10,7 @@ class TestYahooFinanceStockUpdater(unittest.TestCase):
 		spy = Ticker('SPY')
 		sm = StockMarket(datetime.date(2000, 1, 1), [spy])
 		self.assertEqual(sm.ohlc(spy), None)
-		YahooFinanceStockUpdater().update(datetime.datetime.now().date(), sm)
+		sm = YahooFinanceStockUpdater().update(datetime.datetime.now().date(), sm)
 		self.assertNotEqual(sm.ohlc(spy), None)
 
 if __name__ == '__main__':

@@ -19,7 +19,8 @@ class DummyStockMarketUpdater(StockUpdater):
 
 	def update(self, date, stock_market):
 		 ohlc = OHLC(pd.Series([date]), pd.Series([1]), pd.Series([2]), pd.Series([3]), pd.Series([4]))
-		 stock_market.update_ticker(TickerOHLC(Ticker('SPY'), ohlc))
+		 stock_market = stock_market.update_ticker(TickerOHLC(Ticker('SPY'), ohlc))
+		 return stock_market
 
 class DummyMonthlySignalDetector(SignalDetector):
 	def __init__(self):

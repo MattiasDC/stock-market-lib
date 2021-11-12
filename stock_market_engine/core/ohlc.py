@@ -4,6 +4,9 @@ import json
 import pandas as pd
 import toolz
 
+"""
+Open-high-low-close time series data.
+"""
 class OHLC:
 	def __init__(self, dates, open, high, low, close):
 		dates = pd.to_datetime(dates).dt.date

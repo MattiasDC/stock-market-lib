@@ -3,12 +3,16 @@ from .ticker import Ticker
 import datetime
 import json
 
+"""
+A stock market representation starting on a given date with the given tickers.
+Optionally ticker OHLCs can be given to instantiate the stock market.
+"""
 class StockMarket:
-	def __init__(self, start_date, tickers):
+	def __init__(self, start_date, tickers, ticker_OHLCs = {}):
 		assert(tickers)
 		self.__start_date = start_date
 		self.__tickers = tickers
-		self.__ticker_OHLCs = {}
+		self.__ticker_OHLCs = ticker_OHLCs
 
 	@property
 	def start_date(self):
@@ -21,16 +25,22 @@ class StockMarket:
 	def ohlc(self, ticker):
 		return self.__ticker_OHLCs.get(ticker)
 
+	def add_ticker(self, ticker):
+		assert ticker not in self.tickers
+		return StockMarket(self.start_date, self.tickers + [ticker], self.__ticker_OHLCs)
+
 	def update_ticker(self, ticker_OHLC):
 		assert(ticker_OHLC.ticker in self.tickers)
 		if ticker_OHLC.ohlc.end < self.start_date:
-			return
+			return self
 
 		ohlc = ticker_OHLC.ohlc
 		if ohlc.start < self.start_date:
 			ohlc = ohlc.keep_recent_days((ohlc.end - self.start_date).days + 1)
 		assert(ohlc.start >= self.start_date)
-		self.__ticker_OHLCs[ticker_OHLC.ticker] = ohlc
+		new_ticker_OHLCs = self.__ticker_OHLCs.copy()
+		new_ticker_OHLCs[ticker_OHLC.ticker] = ohlc
+		return StockMarket(self.start_date, self.tickers, new_ticker_OHLCs)
 
 	@property
 	def date(self):

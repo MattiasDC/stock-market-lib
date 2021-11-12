@@ -26,8 +26,7 @@ class YahooFinanceStockUpdater(StockUpdater):
 		except json.decoder.JSONDecodeError:
 			logger.warning("Yahoo Finance rate limit encountered!")
 			return None
-		except AssertionError:
-			logger.warning("No data could be retrieved for ({start},{end})!")
+		except AssertionError: # Be flexible in start and end ranges
 			return None
 		except KeyError: # Occurs when no data could be retrieved for the interval (e.g. only weekend interval, bug in yahoo_fin)
 			return None
@@ -49,10 +48,6 @@ class YahooFinanceStockUpdater(StockUpdater):
 			end = date_exclusive
 		else:
 			start, end = self.__get_period(stock_market, ohlc, date_exclusive)
-
-		if start == end:
-			return stock_market
-		assert start < end
 
 		new_ohlc = self.__get_ohlc(start, end, ticker)
 		if new_ohlc is not None:

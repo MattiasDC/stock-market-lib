@@ -10,15 +10,16 @@ class Engine:
 		self.__stock_market_updater = stock_market_updater
 		self.__signal_detectors = signal_detectors
 		self.__signal_sequence = SignalSequence()
+		self.update(self.stock_market.date, True)
 
-	def update(self, date):
+	def update(self, date, force=False):
 		current_end = self.__stock_market.date
-		if date <= current_end:
+		if date <= current_end and not force:
 			return
-		self.__stock_market = self.__stock_market_updater.update(date, self.__stock_market)
+		self.__stock_market = self.__stock_market_updater.update(date, self.stock_market)
 		for date in pd.date_range(current_end + datetime.timedelta(days=1), date + datetime.timedelta(days=1)):
 			for detector in self.__signal_detectors:
-				detector.detect(date.date(), self.__stock_market, self.__signal_sequence)
+				detector.detect(date.date(), self.__stock_market, self.signals)
 
 	@property
 	def stock_market_updater(self):

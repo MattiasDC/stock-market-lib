@@ -40,22 +40,28 @@ class YahooFinanceStockUpdater(StockUpdater):
 					ticker_hist.low,
 					ticker_hist.adjclose)
 
-	def update(self, date, stock_market):
-		date_exclusive = date + datetime.timedelta(days=1)
-		for ticker in stock_market.tickers:
-			ohlc = stock_market.ohlc(ticker)
-			if ohlc is None:
-				start = stock_market.start_date
-				end = date_exclusive
-			else:
-				start, end = self.__get_period(stock_market, ohlc, date_exclusive)
 
-			if start == end:
-				continue
-			assert start < end
-			new_ohlc = self.__get_ohlc(start, end, ticker)
-			if new_ohlc is not None:
-				stock_market = stock_market.update_ticker(TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc)))
+	def __update_ticker(self, date, stock_market, ticker):
+		date_exclusive = date + datetime.timedelta(days=1)
+		ohlc = stock_market.ohlc(ticker)
+		if ohlc is None:
+			start = stock_market.start_date
+			end = date_exclusive
+		else:
+			start, end = self.__get_period(stock_market, ohlc, date_exclusive)
+
+		if start == end:
+			return stock_market
+		assert start < end
+
+		new_ohlc = self.__get_ohlc(start, end, ticker)
+		if new_ohlc is not None:
+			stock_market = stock_market.update_ticker(TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc)))
+		return stock_market
+
+	def update(self, date, stock_market):
+		for ticker in stock_market.tickers:
+			stock_market = self.__update_ticker(date, stock_market, ticker)
 		return stock_market
 
 	def __eq__(self, other):

@@ -10,12 +10,10 @@ from stock_market_engine.core import SignalDetector
 from stock_market_engine.core import StockMarket
 from stock_market_engine.core import StockUpdater
 from stock_market_engine.common.factory import Factory
-from stock_market_engine.ext.signal import register_signal_detector_factories 
-from stock_market_engine.ext.updater import register_stock_updater_factories 
 
 class DummyStockMarketUpdater(StockUpdater):
 	def __init__(self):
-		super().__init__("Dummy")
+		super().__init__("DummyUpdater")
 
 	def update(self, date, stock_market):
 		 ohlc = OHLC(pd.Series([date]), pd.Series([1]), pd.Series([2]), pd.Series([3]), pd.Series([4]))
@@ -24,11 +22,11 @@ class DummyStockMarketUpdater(StockUpdater):
 
 class DummyMonthlySignalDetector(SignalDetector):
 	def __init__(self):
-		super().__init__("Dummy", "Dummy")
+		super().__init__("DummyDetector", "DummyDetector")
 
 	def detect(self, date, stock_market, sequence):
 		if date.day == 1:
-			sequence.add(Signal("Dummy", date))
+			sequence.add(Signal("DummyDetector", date))
 
 	def update(self, date, stock_market):
 		pass
@@ -53,8 +51,8 @@ class TestEngine(unittest.TestCase):
 
 	def test_json(self):
 		factory = Factory()
-		factory.register("Dummy", lambda _: DummyMonthlySignalDetector())
-		register_stock_updater_factories(factory)
+		factory.register("DummyDetector", lambda _: DummyMonthlySignalDetector())
+		factory.register("DummyUpdater", lambda _: DummyStockMarketUpdater())
 		from_json = Engine.from_json(self.engine.to_json(), factory, factory)
 		self.assertEqual(self.engine.stock_market, from_json.stock_market)
 		self.assertEqual(self.engine.signals, from_json.signals)

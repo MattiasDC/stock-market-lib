@@ -4,6 +4,7 @@ from http import HTTPStatus
 import uuid
 
 from .models import EngineModel, TickerModel
+from .config import get_settings
 from stock_market_engine.api.redis import init_redis_pool
 from stock_market_engine.common.factory import Factory
 from stock_market_engine.core import Engine
@@ -28,7 +29,7 @@ async def create_engine(engine_config: EngineModel):
 	engine = engine_config.create(get_stock_updater_factory(), get_signal_detector_factory())
 	random_id = str(uuid.uuid4())
 
-	await app.state.redis.set(random_id, engine.to_json())
+	await app.state.redis.set(random_id, engine.to_json(), get_settings().redis_engine_expiration_time)
 	return random_id
 
 async def get_engine(engine_id):
@@ -49,7 +50,7 @@ async def storeTemporary(o, redis):
 	if o is None:
 		return None
 	random_id = str(uuid.uuid4())
-	await app.state.redis.set(random_id, o.to_json(), datetime.timedelta(minutes=60))
+	await app.state.redis.set(random_id, o.to_json(), get_settings().redis_temporary_expiration_time)
 	return random_id
 
 @app.get("/tickers/{engine_id}")
@@ -83,11 +84,13 @@ async def add_ticker(engine_id : uuid.UUID, ticker_id : str):
 	engine = Engine(engine.stock_market.add_ticker(Ticker(ticker_id)),
 					engine.stock_market_updater,
 					engine.signal_detectors)
-	await app.state.redis.set(str(engine_id), engine.to_json())
+	new_engine_id = str(uuid.uuid4())
+	await app.state.redis.set(new_engine_id, engine.to_json())
+	return new_engine_id
 
 
 @app.post("/update/{engine_id}")
 async def update_engine(engine_id : uuid.UUID, date : datetime.date):
 	engine = await get_engine(engine_id)
 	engine.update(date)
-	await app.state.redis.set(str(engine_id), engine.to_json())
+	await app.state.redis.set(engine_id, engine.to_json())

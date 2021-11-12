@@ -93,4 +93,4 @@ async def add_ticker(engine_id : uuid.UUID, ticker_id : str):
 async def update_engine(engine_id : uuid.UUID, date : datetime.date):
 	engine = await get_engine(engine_id)
 	engine.update(date)
-	await app.state.redis.set(engine_id, engine.to_json())
+	await app.state.redis.set(str(engine_id), engine.to_json())

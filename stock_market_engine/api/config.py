@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     redis_temporary_expiration_time : dt.timedelta = dt.timedelta(minutes=os.getenv("REDIS_TEMPORARY_EXPIRATION_MINUTES", 60))
     redis_engine_expiration_time : dt.timedelta = dt.timedelta(days=os.getenv("REDIS_ENGINE_EXPIRATION_DAYS", 30))
     stock_updater: str = os.getenv("STOCK_UPDATER", "yahoo")
+    max_ticker_symbol_length : int = os.getenv("MAX_TICKER_SYMBOL_LENGTH", 10)
 
 @cache
 def get_settings() -> BaseSettings:

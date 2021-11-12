@@ -21,6 +21,14 @@ class Engine:
 				detector.detect(date.date(), self.__stock_market, self.__signal_sequence)
 
 	@property
+	def stock_market_updater(self):
+		return self.__stock_market_updater
+
+	@property
+	def signal_detectors(self):
+		return self.__signal_detectors
+
+	@property
 	def stock_market(self):
 		return self.__stock_market
 		

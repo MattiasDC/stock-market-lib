@@ -74,6 +74,18 @@ async def get_signals_id(engine_id : uuid.UUID):
 		return Response(status_code=HTTPStatus.NO_CONTENT.value)
 	return random_id
 
+@app.post("/addticker/{engine_id}/{ticker_id}")
+async def add_ticker(engine_id : uuid.UUID, ticker_id : str):
+	engine = await get_engine(engine_id)
+	if Ticker(ticker_id) in engine.stock_market.tickers:
+		return Response(status_code=HTTPStatus.NO_CONTENT.value)
+
+	engine = Engine(engine.stock_market.add_ticker(Ticker(ticker_id)),
+					engine.stock_market_updater,
+					engine.signal_detectors)
+	await app.state.redis.set(str(engine_id), engine.to_json())
+
+
 @app.post("/update/{engine_id}")
 async def update_engine(engine_id : uuid.UUID, date : datetime.date):
 	engine = await get_engine(engine_id)

@@ -1,9 +1,10 @@
 import dateparser
-import datetime
+import datetime as dt
 import functools
 import pandas as pd
 import unittest
 from stock_market_engine.core import TimeSeries
+from stock_market_engine.core.time_series import make_relative
 
 class TestTimeSeries(unittest.TestCase):
 
@@ -37,7 +38,7 @@ class TestTimeSeries(unittest.TestCase):
 	def test_keep_recent_days(self):
 		month_days = 30
 		trimmed_series = self.ts.keep_recent_days(month_days)
-		self.assertEqual(trimmed_series.duration, datetime.timedelta(days=month_days-1))
+		self.assertEqual(trimmed_series.duration, dt.timedelta(days=month_days-1))
 		self.assertEqual(trimmed_series.end, self.ts.end)
 
 	def test_eq(self):
@@ -45,11 +46,29 @@ class TestTimeSeries(unittest.TestCase):
 		self.assertNotEqual(self.ts, 0)
 
 	def test_len(self):
-		series = TimeSeries("dummy", pd.DataFrame(data=[[datetime.date(2020, 1, 1), 0], [datetime.date(2020,1,2), 10]]))
+		series = TimeSeries("dummy", pd.DataFrame(data=[[dt.date(2020, 1, 1), 0], [dt.date(2020,1,2), 10]]))
 		self.assertEqual(len(series), 2)
 
 	def test_json(self):
 		self.assertEqual(self.ts, TimeSeries.from_json(self.ts.to_json()))
+
+	def test_make_relative(self):
+		first = TimeSeries("1", pd.DataFrame({"date" : [dt.date(2020, 1, 7), dt.date(2020, 1, 8), dt.date(2020, 1, 9)],
+											  "value" : [1, 2, 3]}))
+		second = TimeSeries("2", pd.DataFrame({"date" : [dt.date(2020, 1, 8), dt.date(2020, 1, 9), dt.date(2020, 1, 10)],
+											   "value" : [3, 6, 9]}))
+		third = TimeSeries("3", pd.DataFrame({"date" : [dt.date(2020, 1, 8), dt.date(2020, 1, 9), dt.date(2020, 1, 10)],
+											  "value" : [1, 0, 1]}))
+		relatives = make_relative([first, second, third])
+		self.assertEqual(relatives[0],
+			TimeSeries("1 (rel)", pd.DataFrame({"date" : [dt.date(2020, 1, 7), dt.date(2020, 1, 8), dt.date(2020, 1, 9)],
+							  				    "value" : [1.0, 2.0, 3.0]})))
+		self.assertEqual(relatives[1],
+			TimeSeries("2 (rel)", pd.DataFrame({"date" : [dt.date(2020, 1, 8), dt.date(2020, 1, 9), dt.date(2020, 1, 10)],
+												"value" : [2.0, 4.0, 6.0]})))
+		self.assertEqual(relatives[2],
+			TimeSeries("3 (rel)", pd.DataFrame({"date" : [dt.date(2020, 1, 8), dt.date(2020, 1, 9), dt.date(2020, 1, 10)],
+												"value" : [2.0, 0, 2.0]})))
 
 if __name__ == '__main__':
     unittest.main()

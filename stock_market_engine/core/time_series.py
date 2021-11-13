@@ -78,3 +78,28 @@ def merge_time_series(first, second):
 	assert first.name == second.name
 	assert (first.end + datetime.timedelta(days=1) == second.start) or (second.start.weekday() == 0 and second.start > first.end)
 	return TimeSeries(first.name, pd.concat([first.time_values, second.time_values], ignore_index=True))
+
+def __find_nearest(value, df, find_col, value_col):
+    exactmatch = df[df[find_col] == value]
+    if not exactmatch.empty:
+        return exactmatch.iloc[0][value_col]
+    else:
+        lowerneighbour_ind = df[df[find_col] < value][find_col].idxmax()
+        upperneighbour_ind = df[df[find_col] > value][find_col].idxmin()
+        return (df.iloc[lowerneighbour_ind][value_col] + df.iloc[upperneighbour_ind][value_col])/2.0
+
+def make_relative(time_series_list):
+	def take_start(series):
+		return series.start
+	relative_min = min(time_series_list, key=take_start)
+	relative_min_series = relative_min.time_values.copy()
+	relative_min_series.value = relative_min_series.value/relative_min_series.iloc[0].value
+
+	relative_time_series_list = []
+	for time_series in time_series_list:
+		correction_percentage = __find_nearest(time_series.start, relative_min_series, "date", "value")
+		relative_time_values = time_series.time_values.copy()
+		base_value = relative_time_values.iloc[0].value/correction_percentage
+		relative_time_values.value = relative_time_values.value/base_value
+		relative_time_series_list.append(TimeSeries(time_series.name + " (rel)", relative_time_values))
+	return relative_time_series_list

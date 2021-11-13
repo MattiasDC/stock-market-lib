@@ -76,7 +76,7 @@ class TimeSeries:
 
 def merge_time_series(first, second):
 	assert first.name == second.name
-	assert (first.end + datetime.timedelta(days=1) == second.start) or (second.start.weekday() == 0 and second.start > first.end)
+	assert first.end < second.start
 	return TimeSeries(first.name, pd.concat([first.time_values, second.time_values], ignore_index=True))
 
 def __find_nearest(value, df, find_col, value_col):

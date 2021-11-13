@@ -4,6 +4,10 @@ import json
 import pandas as pd
 import toolz
 
+from stock_market_engine.common.logging import get_logger
+
+logger = get_logger(__name__)
+
 """
 Open-high-low-close time series data.
 """
@@ -84,7 +88,8 @@ def merge_ohlcs(first, second):
 	if first is None:
 		return second
 	assert second is not None
-	assert (first.end + datetime.timedelta(days=1) == second.start) or (second.start.weekday() == 0 and second.start > first.end)
+	assert (first.end + datetime.timedelta(days=1) == second.start) or\
+		   (second.start.weekday() == 0 and second.start > first.end), logger.error(f"First end: {first.end}, second start: {second.start}")
 	return OHLC.from_series(pd.concat([first.dates, second.dates], ignore_index=True),
 							merge_time_series(first.open, second.open),
 							merge_time_series(first.high, second.high),

@@ -89,6 +89,9 @@ def __find_nearest(value, df, find_col, value_col):
         return (df.iloc[lowerneighbour_ind][value_col] + df.iloc[upperneighbour_ind][value_col])/2.0
 
 def make_relative(time_series_list):
+	if not time_series_list:
+		return []
+		
 	def take_start(series):
 		return series.start
 	relative_min = min(time_series_list, key=take_start)

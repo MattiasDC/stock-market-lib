@@ -85,7 +85,7 @@ def merge_ohlcs(first, second):
 		return second
 	assert second is not None
 	dates = pd.concat([first.dates, second.dates], ignore_index=True)
-	dates.drop_duplicates(subset='dates', keep='last', inplace=True)
+	dates.drop_duplicates(keep='last', inplace=True)
 	return OHLC.from_series(dates,
 							merge_time_series(first.open, second.open),
 							merge_time_series(first.high, second.high),

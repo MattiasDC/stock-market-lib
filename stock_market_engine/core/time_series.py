@@ -76,8 +76,9 @@ class TimeSeries:
 
 def merge_time_series(first, second):
 	assert first.name == second.name
-	assert first.end < second.start
-	return TimeSeries(first.name, pd.concat([first.time_values, second.time_values], ignore_index=True))
+	time_values = pd.concat([first.time_values, second.time_values], ignore_index=True)
+	time_values.drop_duplicates(subset="date", keep='last', inplace=True)
+	return TimeSeries(first.name, time_values)
 
 def __find_nearest(value, df, find_col, value_col):
     exactmatch = df[df[find_col] == value]

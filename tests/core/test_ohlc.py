@@ -41,7 +41,6 @@ class TestOHLC(unittest.TestCase):
 		self.assertEqual(trimmed.end, self.ohlc.end)
 		self.assertEqual(trimmed.start, self.ohlc.end - datetime.timedelta(days=9))
 
-
 	def test_eq(self):
 		self.assertEqual(self.ohlc, self.ohlc)
 		self.assertNotEqual(self.ohlc, 0)

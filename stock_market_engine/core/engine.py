@@ -12,11 +12,11 @@ class Engine:
 		self.__signal_sequence = SignalSequence()
 		
 	def update(self, date):
-		current_end = self.__stock_market.date
-		self.__stock_market = self.__stock_market_updater.update(date, self.stock_market)
+		current_end = self.stock_market.date
+		self.__stock_market = self.stock_market_updater.update(date, self.stock_market)
 		for date in pd.date_range(current_end + dt.timedelta(days=1), date + dt.timedelta(days=1)):
-			for detector in self.__signal_detectors:
-				detector.detect(date.date(), self.__stock_market, self.signals)
+			for detector in self.signal_detectors:
+				detector.detect(date.date(), self.stock_market, self.signals)
 
 	@property
 	def stock_market_updater(self):
@@ -37,8 +37,8 @@ class Engine:
 	def to_json(self):
 		return json.dumps({"stock_market" : self.stock_market.to_json(),
 					       "signals" : self.signals.to_json(),
-					       "stock_updater" : self.__stock_market_updater.to_json(),
-					       "signal_detectors" : json.dumps([detector.to_json() for detector in self.__signal_detectors])})
+					       "stock_updater" : self.stock_market_updater.to_json(),
+					       "signal_detectors" : json.dumps([detector.to_json() for detector in self.signal_detectors])})
 
 	@staticmethod
 	def from_json(json_str, stock_updater_factory, signal_detector_factory):

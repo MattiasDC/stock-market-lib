@@ -12,4 +12,4 @@ class ExponentialMovingAverage:
 						  			ignore_index=True))
 
 	def __str__(self):
-		return self.__name__ + f"({self.period})"
+		return f"EMA({self.period})"

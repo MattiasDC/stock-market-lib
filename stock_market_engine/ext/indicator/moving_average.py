@@ -10,3 +10,6 @@ class MovingAverage:
 						  pd.concat([series.dates, series.values.rolling(self.period, min_periods=1).mean()],
 						  			axis=1,
 						  			ignore_index=True))
+
+	def __str__(self):
+		return self.__name__ + f"({self.period})"

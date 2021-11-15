@@ -10,3 +10,6 @@ class ExponentialMovingAverage:
 						  pd.concat([series.dates, series.values.ewm(span=self.period).mean()],
 						  			axis=1,
 						  			ignore_index=True))
+
+	def __str__(self):
+		return self.__name__ + f"({self.period})"

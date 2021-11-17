@@ -26,4 +26,4 @@ class ExponentialMovingAverage:
 	
 	@staticmethod
 	def from_json(json_str):
-		return MovingAverage(**json.loads(json_str))
+		return ExponentialMovingAverage(**json.loads(json_str))

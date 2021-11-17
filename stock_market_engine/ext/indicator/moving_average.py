@@ -13,6 +13,11 @@ class MovingAverage:
 						  			axis=1,
 						  			ignore_index=True))
 
+	def __eq__(self, other):
+		if not isinstance(other, MovingAverage):
+			return False
+		return self.period == other.period
+		
 	def __str__(self):
 		return f"MA({self.period})"
 

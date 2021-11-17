@@ -8,7 +8,7 @@ class MovingAverage:
 		self.period = period
 
 	def __call__(self, series : TimeSeries):
-		return TimeSeries(f"ma{self.period} {series.name}",
+		return TimeSeries(f"{self} {series.name}",
 						  pd.concat([series.dates, series.values.rolling(self.period, min_periods=1).mean()],
 						  			axis=1,
 						  			ignore_index=True))

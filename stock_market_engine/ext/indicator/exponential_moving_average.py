@@ -8,7 +8,7 @@ class ExponentialMovingAverage:
 		self.period = period
 
 	def __call__(self, series : TimeSeries):
-		return TimeSeries(f"ema{self.period} {series.name}",
+		return TimeSeries(f"{self} {series.name}",
 						  pd.concat([series.dates, series.values.ewm(span=self.period).mean()],
 						  			axis=1,
 						  			ignore_index=True))

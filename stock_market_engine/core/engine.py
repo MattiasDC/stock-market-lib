@@ -35,16 +35,20 @@ class Engine:
 		return self.__signal_sequence
 
 	def to_json(self):
+		stock_market_updater_json = {"name": self.stock_market_updater.name,
+									 "config": self.stock_market_updater.to_json()}
+		signal_detectors_json = [{"name" : detector.name,
+					       		  "config": detector.to_json()} for detector in self.signal_detectors]
 		return json.dumps({"stock_market" : self.stock_market.to_json(),
 					       "signals" : self.signals.to_json(),
-					       "stock_updater" : self.stock_market_updater.to_json(),
-					       "signal_detectors" : json.dumps([detector.to_json() for detector in self.signal_detectors])})
+					       "stock_updater" : stock_market_updater_json,
+					       "signal_detectors" : signal_detectors_json})
 
 	@staticmethod
 	def from_json(json_str, stock_updater_factory, signal_detector_factory):
 		json_obj = json.loads(json_str)
 		engine = Engine(StockMarket.from_json(json_obj["stock_market"]),
-				 	    stock_updater_factory.create(json_obj["stock_updater"]),
-				        [signal_detector_factory.create(config) for config in json.loads(json_obj["signal_detectors"])])
+				 	    stock_updater_factory.create(json_obj["stock_updater"]["name"], json_obj["stock_updater"]["config"]),
+				        [signal_detector_factory.create(config["name"], config["config"]) for config in json_obj["signal_detectors"]])
 		engine.__signal_sequence == SignalSequence.from_json(json_obj["signals"])
 		return engine

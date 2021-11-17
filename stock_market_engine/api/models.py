@@ -26,7 +26,7 @@ class SignalModel(BaseModel):
 	config : Json
 
 	def create(self, factory):
-		return factory.create(json.loads(self.json()))
+		return factory.create(self.name, self.config)
 
 class SignalsModel(BaseModel):
 	signals: List[SignalModel]
@@ -41,5 +41,5 @@ class EngineModel(BaseModel):
 	def create(self, stock_updater_factory, signal_detector_factory):
 		sm = self.stock_market.create()
 		signal_detectors = self.signals.create(signal_detector_factory)
-		stock_updater = stock_updater_factory.create({"name" : get_settings().stock_updater})
+		stock_updater = stock_updater_factory.create(get_settings().stock_updater, None)
 		return Engine(sm, stock_updater, signal_detectors)

@@ -10,13 +10,13 @@ class TestFactory(unittest.TestCase):
 	def test_create(self):
 		factory = Factory()
 		register_signal_detector_factories(factory)
-		self.assertEqual(factory.create({"name" : "monthly"}), MonthlySignalDetector())
-		self.assertEqual(factory.create({"name" : "bimonthly"}), BiMonthlySignalDetector())
+		self.assertEqual(factory.create("monthly", None), MonthlySignalDetector())
+		self.assertEqual(factory.create("bimonthly", None), BiMonthlySignalDetector())
 
 	def test_register(self):
 		factory = Factory()
 		factory.register("m", lambda _: MonthlySignalDetector())
-		self.assertEqual(factory.create({"name" : "m"}), MonthlySignalDetector())
+		self.assertEqual(factory.create("m", None), MonthlySignalDetector())
 
 if __name__ == '__main__':
     unittest.main()

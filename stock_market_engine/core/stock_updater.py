@@ -6,7 +6,3 @@ class StockUpdater:
 	@property
 	def name(self):
 		return self.__name
-
-	def to_json(self):
-		return {"name" : self.__name}
-		

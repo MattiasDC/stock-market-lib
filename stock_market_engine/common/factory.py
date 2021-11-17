@@ -8,6 +8,6 @@ class Factory:
 		self.creator_map[name] = creator
 		return self
 
-	def create(self, config):
-		assert config['name'] in self.creator_map, str((self.creator_map, config["name"]))
-		return self.creator_map[config.pop('name')](config)
+	def create(self, name, config):
+		assert name in self.creator_map, str((self.creator_map, name))
+		return self.creator_map[name](config)

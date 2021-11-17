@@ -1,6 +1,8 @@
 import datetime
+import json
 import pandas as pd
 import unittest
+
 from stock_market_engine.core import Engine
 from stock_market_engine.core import OHLC
 from stock_market_engine.core import TickerOHLC
@@ -20,6 +22,13 @@ class DummyStockMarketUpdater(StockUpdater):
 		 stock_market = stock_market.update_ticker(TickerOHLC(Ticker('SPY'), ohlc))
 		 return stock_market
 
+	def to_json(self):
+		return json.dumps({})
+
+	@staticmethod
+	def from_json(json_str):
+		return DummyStockMarketUpdater()
+
 class DummyMonthlySignalDetector(SignalDetector):
 	def __init__(self):
 		super().__init__("DummyDetector", "DummyDetector")
@@ -30,6 +39,13 @@ class DummyMonthlySignalDetector(SignalDetector):
 
 	def update(self, date, stock_market):
 		pass
+
+	def to_json(self):
+		return json.dumps({})
+
+	@staticmethod
+	def from_json(json_str):
+		return DummyMonthlySignalDetector()
 
 class TestEngine(unittest.TestCase):
 

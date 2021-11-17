@@ -1,6 +1,8 @@
+import datetime
+import json
+
 from stock_market_engine.core.signal.signal import Signal
 from stock_market_engine.core.signal.signal_detector import SignalDetector
-import datetime
 
 class FixedIntervalSignal(Signal):
 	def __init__(self, date, intervalName):
@@ -30,6 +32,13 @@ class MonthlySignalDetector(SignalDetector):
 	def __eq__(self, other):
 		return isinstance(other, MonthlySignalDetector)
 
+	def to_json(self):
+		return json.dumps({})
+
+	@staticmethod
+	def from_json(json_str):
+		return MonthlySignalDetector()
+
 class BiMonthlySignalDetector(SignalDetector):
 	def __init__(self):
 		name = "bimonthly"
@@ -41,3 +50,10 @@ class BiMonthlySignalDetector(SignalDetector):
 
 	def __eq__(self, other):
 		return isinstance(other, BiMonthlySignalDetector)
+
+	def to_json(self):
+		return json.dumps({})
+
+	@staticmethod
+	def from_json(json_str):
+		return BiMonthlySignalDetector()

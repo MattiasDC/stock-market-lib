@@ -7,9 +7,6 @@ class SignalDetector:
 	@property
 	def name(self):
 		return self.__name
-
-	def to_json(self):
-		return {"name" : self.name}
 		
 	def signal(self, date, sequence):
 		sequence.add(self.__signal_factory.create(date))

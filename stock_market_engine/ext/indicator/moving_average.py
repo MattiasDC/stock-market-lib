@@ -1,5 +1,7 @@
-from stock_market_engine.core.time_series import TimeSeries
+import json
 import pandas as pd
+
+from stock_market_engine.core.time_series import TimeSeries
 
 class MovingAverage:
 	def __init__(self, period):
@@ -13,3 +15,10 @@ class MovingAverage:
 
 	def __str__(self):
 		return f"MA({self.period})"
+
+	def to_json(self):
+		return json.dumps({'period' : self.period})
+
+	@staticmethod
+	def from_json(json_str):
+		return MovingAverage(**json.loads(json_str))

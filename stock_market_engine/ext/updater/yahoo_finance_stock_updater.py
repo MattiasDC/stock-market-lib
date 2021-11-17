@@ -61,3 +61,10 @@ class YahooFinanceStockUpdater(StockUpdater):
 
 	def __eq__(self, other):
 		return isinstance(other, YahooFinanceStockUpdater)
+
+	def to_json(self):
+		return json.dumps({})
+
+	@staticmethod
+	def from_json(json_str):
+		return YahooFinanceStockUpdater()

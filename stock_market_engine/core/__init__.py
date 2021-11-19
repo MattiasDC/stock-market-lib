@@ -1,5 +1,4 @@
 from .signal import *
-from .engine import Engine
 from .ohlc import OHLC
 from .stock_market import StockMarket
 from .stock_updater import StockUpdater

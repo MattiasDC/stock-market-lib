@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import unittest
 
-from stock_market_engine.core import Engine
+from stock_market_engine.api.engine import Engine
 from stock_market_engine.core import OHLC
 from stock_market_engine.core import TickerOHLC
 from stock_market_engine.core import Ticker

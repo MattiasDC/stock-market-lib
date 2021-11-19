@@ -1,8 +1,9 @@
-from .signal.signal_sequence import SignalSequence
-from .stock_market import StockMarket
 import datetime as dt
 import json
 import pandas as pd
+
+from stock_market_engine.core.signal.signal_sequence import SignalSequence
+from stock_market_engine.core.stock_market import StockMarket
 
 class Engine:
 	def __init__(self, stock_market, stock_market_updater, signal_detectors):

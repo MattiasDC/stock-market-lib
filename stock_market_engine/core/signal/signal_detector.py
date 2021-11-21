@@ -1,12 +1,13 @@
 
 class SignalDetector:
-	def __init__(self, name, signal_factory):
+	def __init__(self, identifier, name):
+		self.__id = identifier
 		self.__name = name
-		self.__signal_factory = signal_factory
 
 	@property
 	def name(self):
 		return self.__name
-		
-	def signal(self, date, sequence):
-		sequence.add(self.__signal_factory.create(date))
+
+	@property
+	def id(self):
+		return self.__id

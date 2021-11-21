@@ -12,16 +12,16 @@ class TestBiMonthlySignalDetector(unittest.TestCase):
 		spy = Ticker('SPY')
 		sm = StockMarket(datetime.date(2000, 1, 1), [spy])
 		sequence = SignalSequence()
-		detector = BiMonthlySignalDetector()
-		detector.detect(datetime.date(2000, 1, 2), sm, sequence)
+		detector = BiMonthlySignalDetector(1)
+		sequence = detector.detect(datetime.date(2000, 1, 2), sm, sequence)
 		self.assertFalse(sequence.signals)
-		detector.detect(datetime.date(2000, 1, 15), sm, sequence)
+		sequence = detector.detect(datetime.date(2000, 1, 15), sm, sequence)
 		self.assertEqual(len(sequence.signals), 1)
-		detector.detect(datetime.date(2000, 2, 1), sm, sequence)
+		sequence = detector.detect(datetime.date(2000, 2, 1), sm, sequence)
 		self.assertEqual(len(sequence.signals), 2)
 
 		for date in pd.date_range(datetime.date(2001, 1, 1), datetime.date(2001, 12, 31)):
-			detector.detect(date.date(), sm, sequence)
+			sequence = detector.detect(date.date(), sm, sequence)
 		self.assertEqual(len(sequence.signals), 26)
 
 if __name__ == '__main__':

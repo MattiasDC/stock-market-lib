@@ -1,4 +1,5 @@
 import json
+
 from .signal import Signal
 
 class SignalSequence:
@@ -19,11 +20,6 @@ class SignalSequence:
 	def signals_since(self, date):
 		return [s for s in self.signals if s.date > date]
 
-	def add(self, signal):
-		assert(signal not in self.__signals)
-		assert(not self.__signals or signal.date >= self.__signals[-1].date)
-		self.__signals.append(signal)
-
 	def __str__(self):
 		signals_string = ", ".join(map(str, self.signals))
 		return f"SignalSequence({signals_string})"
@@ -43,3 +39,10 @@ class SignalSequence:
 	@staticmethod
 	def from_json(json_str):
 		return SignalSequence([Signal.from_json(s) for s in json.loads(json_str)])
+
+def add_signal(sequence, signal):
+	assert signal not in sequence.signals
+	assert not sequence.signals or signal.date >= sequence.signals[-1].date
+	signals = sequence.signals.copy()
+	signals.append(signal)
+	return SignalSequence(signals)

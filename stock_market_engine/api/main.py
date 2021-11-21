@@ -7,7 +7,7 @@ from .models import EngineModel, TickerModel
 from .config import get_settings
 from stock_market_engine.api.redis import init_redis_pool
 from stock_market_engine.common.factory import Factory
-from stock_market_engine.api.engine import Engine
+from stock_market_engine.api.engine import Engine, add_ticker
 from stock_market_engine.core import Ticker
 from stock_market_engine.ext.signal import register_signal_detector_factories 
 from stock_market_engine.ext.updater import register_stock_updater_factories 
@@ -85,9 +85,7 @@ async def add_ticker(engine_id : uuid.UUID, ticker_id : str):
 	if ticker in engine.stock_market.tickers:
 		return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
-	engine = Engine(engine.stock_market.add_ticker(ticker),
-					engine.stock_market_updater,
-					engine.signal_detectors)
+	add_ticker(engine, ticker)
 	new_engine_id = str(uuid.uuid4())
 	await store_engine(engine, new_engine_id)
 	return new_engine_id

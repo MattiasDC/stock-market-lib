@@ -3,14 +3,15 @@ import json
 import pandas as pd
 import unittest
 
-from stock_market_engine.api.engine import Engine
-from stock_market_engine.core import OHLC
-from stock_market_engine.core import TickerOHLC
-from stock_market_engine.core import Ticker
-from stock_market_engine.core import Signal
-from stock_market_engine.core import SignalDetector
-from stock_market_engine.core import StockMarket
-from stock_market_engine.core import StockUpdater
+from stock_market_engine.api.engine import Engine, add_ticker, remove_ticker, add_detector, remove_detector
+from stock_market_engine.core import add_signal,\
+									 OHLC,\
+									 TickerOHLC,\
+									 Ticker,\
+									 Signal,\
+									 SignalDetector,\
+									 StockMarket,\
+									 StockUpdater
 from stock_market_engine.common.factory import Factory
 
 class DummyStockMarketUpdater(StockUpdater):
@@ -31,14 +32,18 @@ class DummyStockMarketUpdater(StockUpdater):
 
 class DummyMonthlySignalDetector(SignalDetector):
 	def __init__(self):
-		super().__init__("DummyDetector", "DummyDetector")
+		super().__init__(1, "DummyDetector")
 
 	def detect(self, date, stock_market, sequence):
 		if date.day == 1:
-			sequence.add(Signal("DummyDetector", date))
+			sequence = add_signal(sequence, Signal(self.id, self.name, date))
+		return sequence
 
 	def update(self, date, stock_market):
 		pass
+
+	def __eq__(self, other):
+		return isinstance(other, DummyMonthlySignalDetector)
 
 	def to_json(self):
 		return json.dumps({})
@@ -72,6 +77,28 @@ class TestEngine(unittest.TestCase):
 		from_json = Engine.from_json(self.engine.to_json(), factory, factory)
 		self.assertEqual(self.engine.stock_market, from_json.stock_market)
 		self.assertEqual(self.engine.signals, from_json.signals)
+
+	def test_add_ticker(self):
+		QQQ = Ticker("QQQ")
+		engine = add_ticker(self.engine, QQQ)
+		self.assertTrue(QQQ in engine.stock_market.tickers)
+
+	def test_remove_ticker(self):
+		engine = remove_ticker(self.engine, self.spy)
+		self.assertFalse(self.spy in engine.stock_market.tickers)
+
+	def test_add_detector(self):
+		detector = DummyMonthlySignalDetector()
+		engine = Engine(self.stock_market, self.stock_updater, [])
+		engine = add_detector(engine, detector)
+		self.assertTrue(detector in engine.signal_detectors)
+
+	def test_remove_detector(self):
+		detector = DummyMonthlySignalDetector()
+		engine = Engine(self.stock_market, self.stock_updater, [])
+		engine = add_detector(engine, detector)
+		engine = remove_detector(engine, detector)
+		self.assertFalse(detector in engine.signal_detectors)
 
 if __name__ == '__main__':
     unittest.main()

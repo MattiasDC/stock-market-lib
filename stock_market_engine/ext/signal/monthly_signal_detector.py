@@ -6,7 +6,7 @@ from stock_market_engine.core import SignalDetector
 
 class MonthlySignalDetector(SignalDetector):
 	def __init__(self, identifier):
-		super().__init__(identifier, MonthlySignalDetector.name)
+		super().__init__(identifier, MonthlySignalDetector.NAME())
 
 	def detect(self, date, stock_market, sequence):
 		if date.day == 1:
@@ -19,7 +19,7 @@ class MonthlySignalDetector(SignalDetector):
 		return self.id == other.id
 
 	@staticmethod
-	def name():
+	def NAME():
 		return "monthly"
 
 	def to_json(self):

@@ -6,6 +6,7 @@ from stock_market_engine.api.redis import init_redis_pool
 from .common import get_signal_detector_factory, get_stock_updater_factory, store_engine, get_redis, get_engine
 from .models import EngineModel
 from .stock_market_api import register_stock_market_api
+from .signal_api import register_signal_api
 
 app = FastAPI()
 
@@ -28,3 +29,4 @@ async def update_engine(engine_id : uuid.UUID, date : datetime.date):
 	await store_engine(engine, str(engine_id), get_redis(app))
 
 register_stock_market_api(app)
+register_signal_api(app)

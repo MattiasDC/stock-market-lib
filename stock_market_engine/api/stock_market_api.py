@@ -3,8 +3,8 @@ from fastapi import Response
 from http import HTTPStatus
 
 from .common import get_engine, store_temporary, store_engine, get_redis
-import stock_market_engine.api.engine as eng
 from .engine import Engine
+import stock_market_engine.api.engine as eng
 from stock_market_engine.core.ticker import Ticker
 
 def register_stock_market_api(app):

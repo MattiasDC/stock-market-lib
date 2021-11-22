@@ -1,10 +1,10 @@
 import datetime
 import pandas as pd
 import unittest
-from stock_market_engine.core import StockMarket
-from stock_market_engine.core import Ticker
-from stock_market_engine.core import SignalSequence
-from stock_market_engine.ext.signal import BiMonthlySignalDetector
+from stock_market.core import StockMarket
+from stock_market.core import Ticker
+from stock_market.core import SignalSequence
+from stock_market.ext.signal import BiMonthlySignalDetector
 
 class TestBiMonthlySignalDetector(unittest.TestCase):
 

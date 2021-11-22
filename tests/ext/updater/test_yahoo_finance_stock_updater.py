@@ -1,8 +1,8 @@
 import datetime
 import unittest
-from stock_market_engine.core import StockMarket
-from stock_market_engine.core import Ticker
-from stock_market_engine.ext.updater import YahooFinanceStockUpdater
+from stock_market.core import StockMarket
+from stock_market.core import Ticker
+from stock_market.ext.updater import YahooFinanceStockUpdater
 
 class TestYahooFinanceStockUpdater(unittest.TestCase):
 						 

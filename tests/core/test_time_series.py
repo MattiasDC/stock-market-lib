@@ -3,8 +3,8 @@ import datetime as dt
 import functools
 import pandas as pd
 import unittest
-from stock_market_engine.core import TimeSeries
-from stock_market_engine.core.time_series import make_relative
+from stock_market.core import TimeSeries
+from stock_market.core.time_series import make_relative
 
 class TestTimeSeries(unittest.TestCase):
 

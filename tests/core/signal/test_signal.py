@@ -1,7 +1,7 @@
 import datetime
 import unittest
 
-from stock_market_engine.core import Signal
+from stock_market.core import Signal
 
 class TestSignal(unittest.TestCase):
 						 

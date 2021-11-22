@@ -2,10 +2,10 @@ import datetime
 import json
 import unittest
 
-from stock_market_engine.common.factory import Factory
-from stock_market_engine.ext.signal import BiMonthlySignalDetector
-from stock_market_engine.ext.signal import MonthlySignalDetector
-from stock_market_engine.ext.signal import register_signal_detector_factories
+from stock_market.common.factory import Factory
+from stock_market.ext.signal import BiMonthlySignalDetector
+from stock_market.ext.signal import MonthlySignalDetector
+from stock_market.ext.signal import register_signal_detector_factories
 
 class TestFactory(unittest.TestCase):
 

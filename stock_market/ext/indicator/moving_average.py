@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 
-from stock_market_engine.core.time_series import TimeSeries
+from stock_market.core.time_series import TimeSeries
 
 class MovingAverage:
 	def __init__(self, period):

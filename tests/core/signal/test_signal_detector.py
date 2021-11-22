@@ -1,8 +1,8 @@
 import unittest
 
-from stock_market_engine.core import Signal
-from stock_market_engine.core import SignalDetector
-from stock_market_engine.core import SignalSequence
+from stock_market.core import Signal
+from stock_market.core import SignalDetector
+from stock_market.core import SignalSequence
 
 class TestSignalDetector(unittest.TestCase):
 						 

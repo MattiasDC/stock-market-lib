@@ -1,8 +1,8 @@
 import json
 
-from stock_market_engine.core import add_signal
-from stock_market_engine.core import Signal
-from stock_market_engine.core import SignalDetector
+from stock_market.core import add_signal
+from stock_market.core import Signal
+from stock_market.core import SignalDetector
 
 class MonthlySignalDetector(SignalDetector):
 	def __init__(self, identifier):

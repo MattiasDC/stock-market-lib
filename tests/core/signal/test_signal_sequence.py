@@ -1,8 +1,8 @@
 import datetime
 import unittest
-from stock_market_engine.core import add_signal
-from stock_market_engine.core import Signal
-from stock_market_engine.core import SignalSequence
+from stock_market.core import add_signal
+from stock_market.core import Signal
+from stock_market.core import SignalSequence
 
 class TestSignalSequence(unittest.TestCase):
 						 

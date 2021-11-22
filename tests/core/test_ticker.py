@@ -1,5 +1,5 @@
 import unittest
-from stock_market_engine.core import Ticker
+from stock_market.core import Ticker
 
 class TestTicker(unittest.TestCase):
 						 

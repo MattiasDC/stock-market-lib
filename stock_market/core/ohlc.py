@@ -1,8 +1,9 @@
-from .time_series import TimeSeries, merge_time_series
 import datetime
 import json
 import pandas as pd
 import toolz
+
+from .time_series import TimeSeries, merge_time_series
 
 """
 Open-high-low-close time series data.

@@ -1,7 +1,8 @@
 from stock_market.core.ohlc import OHLC, merge_ohlcs
 from stock_market.core.stock_updater import StockUpdater
 from stock_market.core.ticker_ohlc import TickerOHLC
-from stock_market.common.logging import get_logger
+
+from utils.logging import get_logger
 
 import datetime
 import json

@@ -1,7 +1,8 @@
-from .ohlc import OHLC
-from .ticker import Ticker
 import datetime
 import json
+
+from .ohlc import OHLC
+from .ticker import Ticker
 
 """
 A stock market representation starting on a given date with the given tickers.

@@ -1,29 +1,51 @@
-# README #
+# stock-market-lib
 
-This README would normally document whatever steps are necessary to get your application up and running.
+stock-market-lib is a Python library that contains functionality related to stocks and the stock market in general.
+It also contains functionality to analyze stock time series.
+All classes are considered immutable and should not be changed.
 
-### What is this repository for? ###
+## Installation
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install stock-market-lib.
 
-### How do I get set up? ###
+```bash
+pip install stock-market-lib @ git+https://bitbucket.org/MattiasDC/stock-market-lib.git
+```
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Usage
 
-### Contribution guidelines ###
+```python
+import datetime as dt
+import pandas as pd
+from stock_market.core import StockMarket, Ticker, TickerOHLC, OHLC
 
-* Writing tests
-* Code review
-* Other guidelines
+# Creates a ticker QQQ
+qqq = Ticker("QQQ")
 
-### Who do I talk to? ###
+# Create a stock market that has as start date 1/1/2020, with a single ticker QQQ
+sm = StockMarket(dt.date(2020, 1, 1), [qqq])
 
-* Repo owner or admin
-* Other community or team contact
+# Create a new ticker and new stock market that also contains the SPY ticker
+spy = Ticker('SPY')
+new_sm = sm.add_ticker(spy)
+
+# Create and update OHLC data for ticker SPY
+dates = pd.Series([dt.date(2020, 1, 7), dt.date(2020, 1, 8), dt.date(2020, 1, 9)])
+open = pd.Series([1, 2, 3])
+high = pd.Series([2, 3, 4])
+low = pd.Series([0, 1, 2])
+close = pd.Series([1.5, 1.2, 2.9])
+ohlc = OHLC(dates, open, high, low, close)
+new_sm = new_sm.update_ticker(TickerOHLC(spy, ohlc))
+
+# Query OHLC data for ticker SPY
+print(new_sm.ohlc(spy))
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)

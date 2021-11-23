@@ -18,6 +18,7 @@ pip install stock-market-lib @ git+https://bitbucket.org/MattiasDC/stock-market-
 import datetime as dt
 import pandas as pd
 from stock_market.core import StockMarket, Ticker, TickerOHLC, OHLC
+from stock_market.ext.indicator import ExponentialMovingAverage
 
 # Creates a ticker QQQ
 qqq = Ticker("QQQ")
@@ -39,7 +40,11 @@ ohlc = OHLC(dates, open, high, low, close)
 new_sm = new_sm.update_ticker(TickerOHLC(spy, ohlc))
 
 # Query OHLC data for ticker SPY
-print(new_sm.ohlc(spy))
+ohlc = new_sm.ohlc(spy)
+
+# Create an EMA2 for the closing values of the SPY ticker
+spy_ema2 = ExponentialMovingAverage(2)(ohlc.close)
+print(spy_ema2.values)
 ```
 
 ## Contributing

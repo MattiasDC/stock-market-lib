@@ -15,9 +15,7 @@ class YahooFinanceStockUpdater(StockUpdater):
 		super().__init__("yahoo")
 
 	def __get_period(self, stock_market, ohlc, date):
-		start = ohlc.end + datetime.timedelta(days=1)
-		end = date
-		return start, end
+		return ohlc.end, date
 
 	def __get_ohlc(self, start, end, ticker):
 		ticker_hist = None
@@ -42,13 +40,13 @@ class YahooFinanceStockUpdater(StockUpdater):
 
 
 	def __update_ticker(self, date, stock_market, ticker):
-		date_exclusive = date + datetime.timedelta(days=1)
+		date_inclusive = date + datetime.timedelta(days=1)
 		ohlc = stock_market.ohlc(ticker)
 		if ohlc is None:
 			start = stock_market.start_date
-			end = date_exclusive
+			end = date_inclusive
 		else:
-			start, end = self.__get_period(stock_market, ohlc, date_exclusive)
+			start, end = self.__get_period(stock_market, ohlc, date_inclusive)
 
 		new_ohlc = self.__get_ohlc(start, end, ticker)
 		if new_ohlc is not None:

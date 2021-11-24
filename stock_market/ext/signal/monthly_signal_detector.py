@@ -25,7 +25,7 @@ class MonthlySignalDetector(SignalDetector):
 
 	@staticmethod
 	def from_json(json_str):
-		return MonthlySignalDetector(int(json.loads(json_str)["id"]))
+		return MonthlySignalDetector(json.loads(json_str)["id"])
 
 	@staticmethod
 	def json_schema():

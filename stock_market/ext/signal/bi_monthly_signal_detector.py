@@ -14,9 +14,7 @@ class BiMonthlySignalDetector(SignalDetector):
 		return sequence
 
 	def __eq__(self, other):
-		if not isinstance(other, BiMonthlySignalDetector):
-			return False
-		return self.id == other.id
+		return isinstance(other, BiMonthlySignalDetector)
 
 	@staticmethod
 	def NAME():
@@ -27,7 +25,7 @@ class BiMonthlySignalDetector(SignalDetector):
 
 	@staticmethod
 	def from_json(json_str):
-		return BiMonthlySignalDetector(json.loads(json_str)["id"])
+		return BiMonthlySignalDetector(int(json.loads(json_str)["id"]))
 
 	@staticmethod
 	def json_schema():

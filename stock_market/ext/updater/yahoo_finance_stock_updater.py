@@ -67,3 +67,7 @@ class YahooFinanceStockUpdater(StockUpdater):
 	@staticmethod
 	def from_json(json_str):
 		return YahooFinanceStockUpdater()
+
+	@staticmethod
+	def json_schema():
+		return {"type": "object"}

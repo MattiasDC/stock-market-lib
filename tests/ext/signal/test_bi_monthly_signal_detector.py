@@ -1,6 +1,9 @@
 import datetime
+import json
+from jsonschema import validate
 import pandas as pd
 import unittest
+
 from stock_market.core import StockMarket
 from stock_market.core import Ticker
 from stock_market.core import SignalSequence
@@ -23,6 +26,12 @@ class TestBiMonthlySignalDetector(unittest.TestCase):
 		for date in pd.date_range(datetime.date(2001, 1, 1), datetime.date(2001, 12, 31)):
 			sequence = detector.detect(date.date(), sm, sequence)
 		self.assertEqual(len(sequence.signals), 26)
+
+	def test_json(self):
+		detector = BiMonthlySignalDetector(1)
+		json_str = detector.to_json()
+		self.assertEqual(BiMonthlySignalDetector.from_json(json_str), detector)
+		validate(instance=json.loads(json_str), schema=BiMonthlySignalDetector.json_schema())
 
 if __name__ == '__main__':
     unittest.main()

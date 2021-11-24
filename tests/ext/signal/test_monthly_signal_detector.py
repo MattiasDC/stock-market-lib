@@ -1,6 +1,9 @@
 import datetime
+import json
+from jsonschema import validate
 import pandas as pd
 import unittest
+
 from stock_market.core import StockMarket
 from stock_market.core import Ticker
 from stock_market.core import SignalSequence
@@ -24,6 +27,12 @@ class TestMonthlySignalDetector(unittest.TestCase):
 
 		for s in sequence.signals:
 			self.assertEqual(s.date.day, 1)
+
+	def test_json(self):
+		detector = MonthlySignalDetector(1)
+		json_str = detector.to_json()
+		self.assertEqual(MonthlySignalDetector.from_json(json_str), detector)
+		validate(instance=json.loads(json_str), schema=MonthlySignalDetector.json_schema())
 
 if __name__ == '__main__':
     unittest.main()

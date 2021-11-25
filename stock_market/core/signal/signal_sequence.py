@@ -46,6 +46,3 @@ def add_signal(sequence, signal):
 	signals = sequence.signals.copy()
 	signals.append(signal)
 	return SignalSequence(signals)
-
-def merge_signals(first, second):
-	return SignalSequence(first.signals + second.signals)

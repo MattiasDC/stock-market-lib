@@ -27,3 +27,11 @@ class ExponentialMovingAverage:
 	@staticmethod
 	def from_json(json_str):
 		return ExponentialMovingAverage(**json.loads(json_str))
+
+	@staticmethod
+	def json_schema():
+		return { "type": "object",
+					"properties": {
+						"period": { "type": "date" }
+				 }
+			   }

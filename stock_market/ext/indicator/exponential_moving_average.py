@@ -32,6 +32,6 @@ class ExponentialMovingAverage:
 	def json_schema():
 		return { "type": "object",
 					"properties": {
-						"period": { "type": "date" }
+						"period": { "type": "string", "format" : "date" }
 				 }
 			   }

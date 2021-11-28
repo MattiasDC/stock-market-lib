@@ -1,4 +1,4 @@
-from stock_market.ext.indicator import MovingAverage, ExponentialMovingAverage
+from stock_market.ext.indicator import Identity, MovingAverage, ExponentialMovingAverage
 
 def register_indicator_factories(factory):
 	factory.register(ExponentialMovingAverage.__name__,
@@ -7,4 +7,7 @@ def register_indicator_factories(factory):
 	factory.register(MovingAverage.__name__,
 					 MovingAverage.from_json,
 					 MovingAverage.json_schema())
+	factory.register(Identity.__name__,
+					 Identity.from_json,
+					 Identity.json_schema())
 	return factory

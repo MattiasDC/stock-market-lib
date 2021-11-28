@@ -1,9 +1,7 @@
 import json
 import pandas as pd
 
-from stock_market.core import add_signal
-from stock_market.core import Signal
-from stock_market.core import SignalDetector
+from stock_market.core import add_signal, Signal, SignalDetector, Sentiment
 
 class MonthlySignalDetector(SignalDetector):
 	def __init__(self, identifier):
@@ -12,7 +10,7 @@ class MonthlySignalDetector(SignalDetector):
 	def detect(self, from_date, to_date, stock_market, sequence):
 		for date in map(lambda d: d.date(), pd.date_range(from_date, to_date)):
 			if date.day == 1:
-				sequence = add_signal(sequence, Signal(self.id, self.name, date))
+				sequence = add_signal(sequence, Signal(self.id, self.name, Sentiment.NEUTRAL, date))
 		return sequence
 
 	def __eq__(self, other):
@@ -20,7 +18,7 @@ class MonthlySignalDetector(SignalDetector):
 
 	@staticmethod
 	def NAME():
-		return "monthly"
+		return "Monthly"
 
 	def to_json(self):
 		return json.dumps({"id" : self.id})

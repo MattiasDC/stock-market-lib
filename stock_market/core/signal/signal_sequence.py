@@ -1,4 +1,7 @@
+from heapq import merge
 import json
+
+from utils.algos import is_sorted
 
 from .signal import Signal
 
@@ -8,6 +11,7 @@ class SignalSequence:
 			self.__signals = []
 		else:
 			self.__signals = signals
+			assert is_sorted(signals, lambda s: s.date)
 
 	@property
 	def signals(self):
@@ -46,3 +50,8 @@ def add_signal(sequence, signal):
 	signals = sequence.signals.copy()
 	signals.append(signal)
 	return SignalSequence(signals)
+
+def merge_signals(*signal_sequences):
+	for signals in signal_sequences:
+		assert is_sorted(signals.signals, lambda s: s.date)
+	return SignalSequence(list(merge(*map(lambda s: s.signals, signal_sequences), key= lambda s : s.date)))

@@ -12,8 +12,8 @@ class TestFactory(unittest.TestCase):
 	def test_create(self):
 		factory = Factory()
 		register_signal_detector_factories(factory)
-		self.assertEqual(factory.create("monthly", json.dumps({"id" : 1})), MonthlySignalDetector(1))
-		self.assertEqual(factory.create("bimonthly", json.dumps({"id" : 1})), BiMonthlySignalDetector(1))
+		self.assertEqual(factory.create(MonthlySignalDetector.NAME(), json.dumps({"id" : 1})), MonthlySignalDetector(1))
+		self.assertEqual(factory.create(BiMonthlySignalDetector.NAME(), json.dumps({"id" : 1})), BiMonthlySignalDetector(1))
 
 	def test_register(self):
 		factory = Factory()

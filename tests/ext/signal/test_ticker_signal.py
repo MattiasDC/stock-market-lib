@@ -21,8 +21,8 @@ class TestTickerSignal(unittest.TestCase):
 		identifier = 1
 		signal = TickerSignal(identifier, "test_signal", Sentiment.BULLISH, spy, date)
 		self.assertEqual(signal, signal)
-		self.assertNotEqual(signal, TickerSignal(identifier, "test_signal", Sentiment.BULLISH, Ticker("QQQ"), date))
-		self.assertNotEqual(signal, TickerSignal(identifier, "test_signal", Sentiment.BULLISH, spy, date+dt.timedelta(days=1)))
+		self.assertNotEqual(signal, TickerSignal(identifier+1, "test_signal_1", Sentiment.BULLISH, Ticker("QQQ"), date))
+		self.assertNotEqual(signal, TickerSignal(identifier+2, "test_signal_2", Sentiment.BULLISH, spy, date+dt.timedelta(days=1)))
 
 if __name__ == '__main__':
     unittest.main()

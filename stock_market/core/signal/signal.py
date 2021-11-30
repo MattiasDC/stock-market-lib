@@ -35,6 +35,7 @@ class Signal:
 	def __eq__(self, other):
 		if not isinstance(other, Signal):
 			return False
+
 		assert (self.id == other.id) == (self.name == other.name)
 		assert (self.id != other.id) or (self.sentiment == other.sentiment)
 

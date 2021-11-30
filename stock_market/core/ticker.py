@@ -12,10 +12,10 @@ class Ticker:
 	def __eq__(self, other):
 		if not isinstance(other, Ticker):
 			return False
-		return self.__symbol == other.__symbol
+		return self.symbol == other.symbol
 
 	def __hash__(self):
-		return hash(self.__symbol)
+		return hash(self.symbol)
 
 	def __repr__(self):
 		return f"Ticker({self.symbol})"

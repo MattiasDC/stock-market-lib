@@ -17,7 +17,7 @@ class GoldenCrossSignalDetector(CrossoverSignalDetector):
 
 	@staticmethod
 	def NAME():
-		return "Death cross"
+		return "Golden cross"
 
 	def to_json(self):
 		return json.dumps({"id" : self.id,

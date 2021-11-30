@@ -1,16 +1,17 @@
-from stock_market.core.ohlc import OHLC, merge_ohlcs
-from stock_market.core.stock_updater import StockUpdater
-from stock_market.core.ticker_ohlc import TickerOHLC
-
 from utils.logging import get_logger
 
 import datetime
 import json
 import yahoo_fin.stock_info as yf
 
+from stock_market.common.empty_json_mixin import EmptyJsonMixin
+from stock_market.core.ohlc import OHLC, merge_ohlcs
+from stock_market.core.stock_updater import StockUpdater
+from stock_market.core.ticker_ohlc import TickerOHLC
+
 logger = get_logger(__name__)
 
-class YahooFinanceStockUpdater(StockUpdater):
+class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
 	def __init__(self):
 		super().__init__("yahoo")
 
@@ -60,14 +61,3 @@ class YahooFinanceStockUpdater(StockUpdater):
 
 	def __eq__(self, other):
 		return isinstance(other, YahooFinanceStockUpdater)
-
-	def to_json(self):
-		return json.dumps({})
-
-	@staticmethod
-	def from_json(json_str):
-		return YahooFinanceStockUpdater()
-
-	@staticmethod
-	def json_schema():
-		return {"type": "object"}

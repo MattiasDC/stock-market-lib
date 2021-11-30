@@ -1,9 +1,13 @@
 import json
 import pandas as pd
 
+from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
 from stock_market.core import add_signal, Signal, SignalDetector, Sentiment
 
-class MonthlySignalDetector(SignalDetector):
+class MonthlySignalDetector(SignalDetector, SingleAttributeJsonMixin):
+	JSON_ATTRIBUTE_NAME = "id"
+	JSON_ATTRIBUTE_TYPE = "integer"
+	
 	def __init__(self, identifier):
 		super().__init__(identifier, MonthlySignalDetector.NAME())
 
@@ -19,18 +23,3 @@ class MonthlySignalDetector(SignalDetector):
 	@staticmethod
 	def NAME():
 		return "Monthly"
-
-	def to_json(self):
-		return json.dumps({"id" : self.id})
-
-	@staticmethod
-	def from_json(json_str):
-		return MonthlySignalDetector(json.loads(json_str)["id"])
-
-	@staticmethod
-	def json_schema():
-		return { "type": "object",
-  				 "properties": {
-    			 	"id": { "type": "integer" }
-    			 }
-    		   }

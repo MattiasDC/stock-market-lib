@@ -1,9 +1,13 @@
 import json
 import pandas as pd
 
+from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
 from stock_market.core.time_series import TimeSeries
 
-class ExponentialMovingAverage:
+class ExponentialMovingAverage(SingleAttributeJsonMixin):
+	JSON_ATTRIBUTE_NAME = "period"
+	JSON_ATTRIBUTE_TYPE = "integer"
+
 	def __init__(self, period):
 		self.period = period
 
@@ -20,18 +24,3 @@ class ExponentialMovingAverage:
 
 	def __str__(self):
 		return f"EMA({self.period})"
-
-	def to_json(self):
-		return json.dumps({'period' : self.period})
-	
-	@staticmethod
-	def from_json(json_str):
-		return ExponentialMovingAverage(**json.loads(json_str))
-
-	@staticmethod
-	def json_schema():
-		return { "type": "object",
-					"properties": {
-						"period": { "type": "integer" }
-				 }
-			   }

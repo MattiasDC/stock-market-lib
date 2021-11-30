@@ -1,6 +1,11 @@
 import json
 
-class Ticker:
+from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
+
+class Ticker(SingleAttributeJsonMixin):
+	JSON_ATTRIBUTE_NAME = "symbol"
+	JSON_ATTRIBUTE_TYPE = "string"
+
 	def __init__(self, symbol: str):
 		assert len(symbol) <= 10
 		self.__symbol = symbol
@@ -19,10 +24,3 @@ class Ticker:
 
 	def __repr__(self):
 		return f"Ticker({self.symbol})"
-
-	def to_json(self):
-		return json.dumps({"symbol" : self.symbol})
-
-	@staticmethod
-	def from_json(json_str):
-		return Ticker(**json.loads(json_str))

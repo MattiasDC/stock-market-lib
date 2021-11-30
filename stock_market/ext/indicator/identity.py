@@ -1,8 +1,9 @@
 import json
 
+from stock_market.common.empty_json_mixin import EmptyJsonMixin
 from stock_market.core import TimeSeries
 
-class Identity:
+class Identity(EmptyJsonMixin):
 	def __call__(self, series : TimeSeries):
 		return series
 
@@ -11,14 +12,3 @@ class Identity:
 		
 	def __str__(self):
 		return f"Identity"
-
-	def to_json(self):
-		return json.dumps({})
-
-	@staticmethod
-	def from_json(json_str):
-		return Identity()
-
-	@staticmethod
-	def json_schema():
-		return {}

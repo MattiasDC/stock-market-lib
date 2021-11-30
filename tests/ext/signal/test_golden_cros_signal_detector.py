@@ -19,10 +19,10 @@ class TestDeathCrossSignalDetector(unittest.TestCase):
 		detector = GoldenCrossSignalDetector(1, spy)
 		sequence = detector.detect(start, end, sm, sequence)
 		self.assertTrue(len(sequence.signals) >= 1)
-		death_cross = sequence.signals[-1]
-		self.assertEqual(death_cross.date, datetime.date(2020, 7, 6))
-		self.assertEqual(death_cross.ticker, spy)
-		self.assertEqual(death_cross.sentiment, Sentiment.BULLISH)
+		golden_cross = sequence.signals[-1]
+		self.assertEqual(golden_cross.date, datetime.date(2020, 7, 6))
+		self.assertEqual(golden_cross.ticker, spy)
+		self.assertEqual(golden_cross.sentiment, Sentiment.BULLISH)
 
 	def test_json(self):
 		detector = GoldenCrossSignalDetector(1, Ticker('SPY'))

@@ -24,8 +24,12 @@ class CrossoverSignalDetector(SignalDetector):
 		self.__sentiment = sentiment
 		assert sentiment != Sentiment.NEUTRAL
 
+	@property
+	def ticker(self):
+		return self.__ticker
+
 	def detect(self, from_date, to_date, stock_market, sequence):
-		ohlc = stock_market.ohlc(self.__ticker)
+		ohlc = stock_market.ohlc(self.ticker)
 		assert ohlc is not None
 		responsive_values = self.__responsive_indicator_getter(ohlc.close)
 		unresponsive_values = self.__unresponsive_indicator_getter(ohlc.close)
@@ -42,24 +46,24 @@ class CrossoverSignalDetector(SignalDetector):
 				sequence = add_signal(sequence, TickerSignal(self.id,
 															 self.name,
 															 self.__sentiment,
-															 self.__ticker,
+															 self.ticker,
 															 date_and_value.date))
 			elif date_and_value.value < 0 and self.__sentiment == Sentiment.BEARISH:
 				sequence = add_signal(sequence, TickerSignal(self.id,
 															 self.name,
 															 self.__sentiment,
-															 self.__ticker,
+															 self.ticker,
 															 date_and_value.date))
 		return sequence
 
 	def __eq__(self, other):
 		if not isinstance(other, CrossoverSignalDetector):
 			return False
-		return (self.__ticker,
+		return (self.ticker,
 				self.__responsive_indicator_getter,
 				self.__unresponsive_indicator_getter,
 				self.__sentiment) ==\
-			(other.__ticker,
+			(other.ticker,
 			 other.__responsive_indicator_getter,
 			 other.__unresponsive_indicator_getter,
 			 other.__sentiment)
@@ -71,7 +75,7 @@ class CrossoverSignalDetector(SignalDetector):
 	def to_json(self):
 		return json.dumps({"id" : self.id,
 						   "name" : self.name,
-						   "ticker" : self.__ticker.to_json(),
+						   "ticker" : self.ticker.to_json(),
 						   "responsive_indicator_getter" : 
 					   			{"name" : self.__responsive_indicator_getter.__class__.__name__,
 					   			 "config" : self.__responsive_indicator_getter.to_json()},

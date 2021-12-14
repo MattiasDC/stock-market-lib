@@ -45,7 +45,7 @@ class SignalSequence:
 		return SignalSequence([Signal.from_json(s) for s in json.loads(json_str)])
 
 def add_signal(sequence, signal):
-	assert signal not in sequence.signals
+	assert signal not in sequence.signals, str((sequence.signals, signal))
 	assert not sequence.signals or signal.date >= sequence.signals[-1].date, str((sequence.signals, signal))
 	signals = sequence.signals.copy()
 	signals.append(signal)

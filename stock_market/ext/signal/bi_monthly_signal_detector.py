@@ -30,7 +30,8 @@ class BiMonthlySignalDetector(SignalDetector, SingleAttributeJsonMixin):
 		for date in self.month_range(start, to_date+relativedelta(months=1)):
 			if date >= from_date and date <= to_date:
 				sequence = add_signal(sequence, create_signal(date))
-			if date+dt.timedelta(days=14) <= to_date:
+			half_month = date + dt.timedelta(days=14)
+			if half_month >= from_date and half_month <= to_date:
 				sequence = add_signal(sequence, create_signal(date+dt.timedelta(days=14)))
 
 		return sequence

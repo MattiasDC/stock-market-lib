@@ -1,3 +1,5 @@
+import datetime as dt
+from dateutil.relativedelta import relativedelta
 import json
 import pandas as pd
 
@@ -11,10 +13,16 @@ class MonthlySignalDetector(SignalDetector, SingleAttributeJsonMixin):
 	def __init__(self, identifier):
 		super().__init__(identifier, MonthlySignalDetector.NAME())
 
+	def month_range(self, from_date, to_date):
+		while from_date <= to_date:
+			yield from_date
+			from_date += relativedelta(months=1)
+
 	def detect(self, from_date, to_date, stock_market, sequence):
-		for date in map(lambda d: d.date(), pd.date_range(from_date, to_date)):
-			if date.day == 1:
-				sequence = add_signal(sequence, Signal(self.id, self.name, Sentiment.NEUTRAL, date))
+		if from_date.day != 1:
+			from_date = from_date - dt.timedelta(from_date.day-1) + relativedelta(months=1)
+		for date in self.month_range(from_date, to_date):
+			sequence = add_signal(sequence, Signal(self.id, self.name, Sentiment.NEUTRAL, date))
 		return sequence
 
 	def __eq__(self, other):

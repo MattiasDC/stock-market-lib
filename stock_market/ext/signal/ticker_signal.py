@@ -1,3 +1,5 @@
+import json
+
 from stock_market.core import Signal
 
 class TickerSignal(Signal):

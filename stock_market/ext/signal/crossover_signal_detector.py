@@ -27,9 +27,14 @@ class CrossoverSignalDetector(SignalDetector):
 	def ticker(self):
 		return self.__ticker
 
+	def is_valid(self, stock_market):
+		return self.ticker in stock_market.tickers
+
 	def detect(self, from_date, to_date, stock_market, sequence):
 		ohlc = stock_market.ohlc(self.ticker)
-		assert ohlc is not None
+		if ohlc is None:
+			return sequence
+			
 		responsive_values = self.__responsive_indicator_getter(ohlc.close)
 		unresponsive_values = self.__unresponsive_indicator_getter(ohlc.close)
 		difference = responsive_values.values - unresponsive_values.values

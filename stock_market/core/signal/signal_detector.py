@@ -11,3 +11,6 @@ class SignalDetector:
 	@property
 	def id(self):
 		return self.__id
+
+	def is_valid(self, stock_market):
+		return True

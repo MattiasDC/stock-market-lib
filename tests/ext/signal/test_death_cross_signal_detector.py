@@ -21,7 +21,6 @@ class TestDeathCrossSignalDetector(unittest.TestCase):
 		self.assertEqual(len(sequence.signals), 1)
 		death_cross = sequence.signals[0]
 		self.assertEqual(death_cross.date, datetime.date(2020, 3, 31))
-		self.assertEqual(death_cross.ticker, spy)
 		self.assertEqual(death_cross.sentiment, Sentiment.BEARISH)
 
 	def test_json(self):

@@ -6,8 +6,7 @@ import pandas as pd
 
 from utils.math import sign
 
-from stock_market.core import TimeSeries, Ticker, add_signal, SignalDetector, Sentiment
-from .ticker_signal import TickerSignal
+from stock_market.core import TimeSeries, Ticker, add_signal, SignalDetector, Sentiment, Signal
 
 class CrossoverSignalDetector(SignalDetector):
 	def __init__(self,
@@ -43,17 +42,15 @@ class CrossoverSignalDetector(SignalDetector):
 		crossovers_indices.iloc[0] = False # not interested in the day before from_date
 		for _, date_and_value in relevant_differences.loc[crossovers_indices].iterrows():
 			if date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH:
-				sequence = add_signal(sequence, TickerSignal(self.id,
-															 self.name,
-															 self.__sentiment,
-															 self.ticker,
-															 date_and_value.date))
+				sequence = add_signal(sequence, Signal(self.id,
+													   self.name,
+													   self.__sentiment,
+													   date_and_value.date))
 			elif date_and_value.value < 0 and self.__sentiment == Sentiment.BEARISH:
-				sequence = add_signal(sequence, TickerSignal(self.id,
-															 self.name,
-															 self.__sentiment,
-															 self.ticker,
-															 date_and_value.date))
+				sequence = add_signal(sequence, Signal(self.id,
+												       self.name,
+												       self.__sentiment,
+												       date_and_value.date))
 		return sequence
 
 	def __eq__(self, other):

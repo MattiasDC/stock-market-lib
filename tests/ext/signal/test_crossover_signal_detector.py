@@ -38,6 +38,27 @@ class TestCrossoverSignalDetector(unittest.TestCase):
 		self.alternates_two_values(diff_gt_0)
 		self.assertEqual(diff_gt_0[0], crossover_signals.signals[0].sentiment == Sentiment.BEARISH)
 
+	def test_is_valid(self):
+		start = datetime.date(2000, 1, 1)
+		spy = Ticker('SPY')
+		sm = StockMarket(start, [spy])
+		sequence = SignalSequence()
+		ema = ExponentialMovingAverage(20)
+		bullish_spy_detector = CrossoverSignalDetector(1,
+													   "Bullish SPY Crossover EMA(20)",
+													   spy,
+													   Identity(),
+													   ema,
+													   Sentiment.BULLISH)
+		bullish_qqq_detector = CrossoverSignalDetector(1,
+													   "Bullish QQQ Crossover EMA(20)",
+													   Ticker("QQQ"),
+													   Identity(),
+													   ema,
+													   Sentiment.BULLISH)
+		self.assertTrue(bullish_spy_detector.is_valid(sm))
+		self.assertFalse(bullish_qqq_detector.is_valid(sm))
+
 	def test_detect(self):
 		spy = Ticker('SPY')
 		start = datetime.date(2000, 1, 1)

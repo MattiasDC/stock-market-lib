@@ -9,7 +9,7 @@ from stock_market.ext.indicator import MovingAverage
 class GoldenCrossSignalDetector(CrossoverSignalDetector):
 	def __init__(self, identifier, ticker):
 		super().__init__(identifier,
-						 GoldenCrossSignalDetector.NAME(),
+						 f'{GoldenCrossSignalDetector.NAME()}(ticker)',
 						 ticker,
 						 MovingAverage(50),
 						 MovingAverage(200),

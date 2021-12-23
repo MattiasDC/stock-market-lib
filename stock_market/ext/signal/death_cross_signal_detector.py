@@ -9,7 +9,7 @@ from stock_market.ext.indicator import MovingAverage
 class DeathCrossSignalDetector(CrossoverSignalDetector):
 	def __init__(self, identifier, ticker):
 		super().__init__(identifier,
-						 DeathCrossSignalDetector.NAME(),
+						 f'{DeathCrossSignalDetector.NAME()}(ticker)',
 						 ticker,
 						 MovingAverage(50),
 						 MovingAverage(200),

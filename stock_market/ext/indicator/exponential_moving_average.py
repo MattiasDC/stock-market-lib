@@ -24,3 +24,6 @@ class ExponentialMovingAverage(SingleAttributeJsonMixin):
 
 	def __str__(self):
 		return f"EMA({self.period})"
+
+	def lag_days(self):
+		return self.period

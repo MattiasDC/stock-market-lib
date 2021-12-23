@@ -46,6 +46,8 @@ class CrossoverSignalDetector(SignalDetector):
 		crossovers_indices = np.sign(relevant_differences.value).diff().ne(0)
 		crossovers_indices.iloc[0] = False # not interested in the day before from_date
 		for _, date_and_value in relevant_differences.loc[crossovers_indices].iterrows():
+			if date_and_value.date < stock_market.start_date + dt.timedelta(days=self.__unresponsive_indicator_getter.lag_days()):
+				continue # Unresponsive getter has not been completely setup yet
 			if date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH:
 				sequence = add_signal(sequence, Signal(self.id,
 													   self.name,

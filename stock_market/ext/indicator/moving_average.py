@@ -24,3 +24,6 @@ class MovingAverage(SingleAttributeJsonMixin):
 		
 	def __str__(self):
 		return f"MA({self.period})"
+
+	def lag_days(self):
+		return self.period

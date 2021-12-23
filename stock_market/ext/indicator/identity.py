@@ -12,3 +12,6 @@ class Identity(EmptyJsonMixin):
 		
 	def __str__(self):
 		return f"Identity"
+
+	def lag_days(self):
+		return 0

@@ -16,6 +16,7 @@ class TestMovingAverage(unittest.TestCase):
 		self.assertEqual(ema_series.values.iloc[0], 0)
 		self.assertTrue(ema_series.values.iloc[1] > 5)
 		self.assertTrue(ema_series.values.iloc[2] > 5)
+		self.assertEqual(ema.lag_days(), 2)
 
 if __name__ == '__main__':
     unittest.main()

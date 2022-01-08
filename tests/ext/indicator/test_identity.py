@@ -13,6 +13,7 @@ class TestIdentity(unittest.TestCase):
 		identity = Identity()
 		identity_series = identity(series)
 		self.assertEqual(identity_series, series)
+		self.assertEqual(identity.lag_days(), 0)
 
 if __name__ == '__main__':
     unittest.main()

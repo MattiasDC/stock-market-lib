@@ -1,33 +1,36 @@
 import datetime as dt
 from dateutil.relativedelta import relativedelta
-import json
-import pandas as pd
 
 from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
 from stock_market.core import add_signal, Signal, SignalDetector, Sentiment
 
+
 class MonthlySignalDetector(SignalDetector, SingleAttributeJsonMixin):
-	JSON_ATTRIBUTE_NAME = "id"
-	JSON_ATTRIBUTE_TYPE = "integer"
-	
-	def __init__(self, identifier):
-		super().__init__(identifier, MonthlySignalDetector.NAME())
+    JSON_ATTRIBUTE_NAME = "id"
+    JSON_ATTRIBUTE_TYPE = "integer"
 
-	def month_range(self, from_date, to_date):
-		while from_date <= to_date:
-			yield from_date
-			from_date += relativedelta(months=1)
+    def __init__(self, identifier):
+        super().__init__(identifier, MonthlySignalDetector.NAME())
 
-	def detect(self, from_date, to_date, stock_market, sequence):
-		if from_date.day != 1:
-			from_date = from_date - dt.timedelta(from_date.day-1) + relativedelta(months=1)
-		for date in self.month_range(from_date, to_date):
-			sequence = add_signal(sequence, Signal(self.id, self.name, Sentiment.NEUTRAL, date))
-		return sequence
+    def month_range(self, from_date, to_date):
+        while from_date <= to_date:
+            yield from_date
+            from_date += relativedelta(months=1)
 
-	def __eq__(self, other):
-		return isinstance(other, MonthlySignalDetector)
+    def detect(self, from_date, to_date, stock_market, sequence):
+        if from_date.day != 1:
+            from_date = (
+                from_date - dt.timedelta(from_date.day - 1) + relativedelta(months=1)
+            )
+        for date in self.month_range(from_date, to_date):
+            sequence = add_signal(
+                sequence, Signal(self.id, self.name, Sentiment.NEUTRAL, date)
+            )
+        return sequence
 
-	@staticmethod
-	def NAME():
-		return "Monthly"
+    def __eq__(self, other):
+        return isinstance(other, MonthlySignalDetector)
+
+    @staticmethod
+    def NAME():
+        return "Monthly"

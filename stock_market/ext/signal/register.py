@@ -7,13 +7,32 @@ from .monthly_signal_detector import MonthlySignalDetector
 from stock_market.common.factory import Factory
 from stock_market.ext.indicator.register import register_indicator_factories
 
+
 def register_signal_detector_factories(factory):
-	factory.register(BiMonthlySignalDetector.NAME(), BiMonthlySignalDetector.from_json, BiMonthlySignalDetector.json_schema())
-	indicator_factory = register_indicator_factories(Factory())
-	factory.register(CrossoverSignalDetector.NAME(),
-					 lambda config : CrossoverSignalDetector.from_json(config, indicator_factory),
-					 CrossoverSignalDetector.json_schema())
-	factory.register(DeathCrossSignalDetector.NAME(), DeathCrossSignalDetector.from_json, DeathCrossSignalDetector.json_schema())
-	factory.register(GoldenCrossSignalDetector.NAME(), GoldenCrossSignalDetector.from_json, GoldenCrossSignalDetector.json_schema())
-	factory.register(MonthlySignalDetector.NAME(), MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema())
-	return factory
+    factory.register(
+        BiMonthlySignalDetector.NAME(),
+        BiMonthlySignalDetector.from_json,
+        BiMonthlySignalDetector.json_schema(),
+    )
+    indicator_factory = register_indicator_factories(Factory())
+    factory.register(
+        CrossoverSignalDetector.NAME(),
+        lambda config: CrossoverSignalDetector.from_json(config, indicator_factory),
+        CrossoverSignalDetector.json_schema(),
+    )
+    factory.register(
+        DeathCrossSignalDetector.NAME(),
+        DeathCrossSignalDetector.from_json,
+        DeathCrossSignalDetector.json_schema(),
+    )
+    factory.register(
+        GoldenCrossSignalDetector.NAME(),
+        GoldenCrossSignalDetector.from_json,
+        GoldenCrossSignalDetector.json_schema(),
+    )
+    factory.register(
+        MonthlySignalDetector.NAME(),
+        MonthlySignalDetector.from_json,
+        MonthlySignalDetector.json_schema(),
+    )
+    return factory

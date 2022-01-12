@@ -1,7 +1,7 @@
 from enum import Enum
-import json
 
 from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
+
 
 class Sentiment(SingleAttributeJsonMixin, Enum):
     @classmethod

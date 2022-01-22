@@ -1,8 +1,10 @@
+import datetime
+import unittest
+
+import pandas as pd
+
 from stock_market.core import TimeSeries
 from stock_market.ext.indicator import ExponentialMovingAverage
-import datetime
-import pandas as pd
-import unittest
 
 
 class TestMovingAverage(unittest.TestCase):

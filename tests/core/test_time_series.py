@@ -1,7 +1,9 @@
-import dateparser
 import datetime as dt
-import pandas as pd
 import unittest
+
+import dateparser
+import pandas as pd
+
 from stock_market.core import TimeSeries
 from stock_market.core.time_series import make_relative
 

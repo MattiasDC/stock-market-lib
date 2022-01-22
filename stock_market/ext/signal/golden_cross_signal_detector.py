@@ -1,9 +1,8 @@
 import json
 
-
 from stock_market.core import Sentiment, Ticker
-from stock_market.ext.signal import CrossoverSignalDetector
 from stock_market.ext.indicator import MovingAverage
+from stock_market.ext.signal import CrossoverSignalDetector
 
 
 class GoldenCrossSignalDetector(CrossoverSignalDetector):

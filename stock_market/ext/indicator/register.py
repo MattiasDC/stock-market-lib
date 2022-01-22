@@ -1,4 +1,4 @@
-from stock_market.ext.indicator import Identity, MovingAverage, ExponentialMovingAverage
+from stock_market.ext.indicator import ExponentialMovingAverage, Identity, MovingAverage
 
 
 def register_indicator_factories(factory):

@@ -1,11 +1,11 @@
+from stock_market.common.factory import Factory
+from stock_market.ext.indicator.register import register_indicator_factories
+
 from .bi_monthly_signal_detector import BiMonthlySignalDetector
 from .crossover_signal_detector import CrossoverSignalDetector
 from .death_cross_signal_detector import DeathCrossSignalDetector
 from .golden_cross_signal_detector import GoldenCrossSignalDetector
 from .monthly_signal_detector import MonthlySignalDetector
-
-from stock_market.common.factory import Factory
-from stock_market.ext.indicator.register import register_indicator_factories
 
 
 def register_signal_detector_factories(factory):

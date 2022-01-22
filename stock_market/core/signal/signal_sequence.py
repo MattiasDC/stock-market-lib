@@ -1,5 +1,5 @@
-from heapq import merge
 import json
+from heapq import merge
 
 from utils.algos import is_sorted
 

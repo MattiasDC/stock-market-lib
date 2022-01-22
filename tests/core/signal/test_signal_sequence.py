@@ -1,11 +1,12 @@
 import datetime
 import unittest
+
 from stock_market.core import (
-    add_signal,
-    merge_signals,
+    Sentiment,
     Signal,
     SignalSequence,
-    Sentiment,
+    add_signal,
+    merge_signals,
 )
 
 

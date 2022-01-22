@@ -1,22 +1,22 @@
 import datetime
-from itertools import islice
 import json
-from jsonschema import validate
 import unittest
+from itertools import islice
 
+from jsonschema import validate
 from utils.algos import all_equal
 
 from stock_market.common.factory import Factory
 from stock_market.core import (
+    Sentiment,
+    SignalSequence,
     StockMarket,
     Ticker,
-    SignalSequence,
     merge_signals,
-    Sentiment,
 )
 from stock_market.ext.indicator import (
-    Identity,
     ExponentialMovingAverage,
+    Identity,
     register_indicator_factories,
 )
 from stock_market.ext.signal import CrossoverSignalDetector

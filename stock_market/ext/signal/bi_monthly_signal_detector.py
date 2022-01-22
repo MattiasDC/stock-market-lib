@@ -1,10 +1,9 @@
 import datetime as dt
+
 from dateutil.relativedelta import relativedelta
 
-
 from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
-from stock_market.core import add_signal
-from stock_market.core import Signal, SignalDetector, Sentiment
+from stock_market.core import Sentiment, Signal, SignalDetector, add_signal
 
 
 class BiMonthlySignalDetector(SignalDetector, SingleAttributeJsonMixin):

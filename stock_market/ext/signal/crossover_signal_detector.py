@@ -1,16 +1,16 @@
 import datetime as dt
 import json
+
 import numpy as np
 import pandas as pd
 
-
 from stock_market.core import (
-    TimeSeries,
-    Ticker,
-    add_signal,
-    SignalDetector,
     Sentiment,
     Signal,
+    SignalDetector,
+    Ticker,
+    TimeSeries,
+    add_signal,
 )
 
 
@@ -56,6 +56,9 @@ class CrossoverSignalDetector(SignalDetector):
 
         # Extract all date/values where we crossover
         crossovers_indices = np.sign(relevant_differences.value).diff().ne(0)
+        if len(crossovers_indices) == 0:
+            return sequence
+
         crossovers_indices.iloc[0] = False  # not interested in the day before from_date
         for _, date_and_value in relevant_differences.loc[
             crossovers_indices

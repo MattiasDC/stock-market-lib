@@ -1,11 +1,10 @@
 import datetime
 import json
-from jsonschema import validate
 import unittest
 
-from stock_market.core import StockMarket
-from stock_market.core import Ticker
-from stock_market.core import SignalSequence
+from jsonschema import validate
+
+from stock_market.core import SignalSequence, StockMarket, Ticker
 from stock_market.ext.signal import MonthlySignalDetector
 
 

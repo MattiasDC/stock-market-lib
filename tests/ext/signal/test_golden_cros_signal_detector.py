@@ -1,9 +1,10 @@
 import datetime
 import json
-from jsonschema import validate
 import unittest
 
-from stock_market.core import StockMarket, Ticker, SignalSequence, Sentiment
+from jsonschema import validate
+
+from stock_market.core import Sentiment, SignalSequence, StockMarket, Ticker
 from stock_market.ext.signal import GoldenCrossSignalDetector
 from stock_market.ext.updater import YahooFinanceStockUpdater
 

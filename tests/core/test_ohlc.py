@@ -1,7 +1,9 @@
-import dateparser
 import datetime
-import pandas as pd
 import unittest
+
+import dateparser
+import pandas as pd
+
 from stock_market.core import OHLC
 
 

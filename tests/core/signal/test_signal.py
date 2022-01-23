@@ -1,7 +1,7 @@
 import datetime
 import unittest
 
-from stock_market.core import Sentiment, Signal
+from stock_market.core import Sentiment, Signal, Ticker
 
 
 class TestSignal(unittest.TestCase):
@@ -10,7 +10,11 @@ class TestSignal(unittest.TestCase):
         self.id = 1
         self.sentiment = Sentiment.BULLISH
         self.date = datetime.datetime.now().date()
-        self.signal = Signal(self.id, self.name, self.sentiment, self.date)
+        self.spy = Ticker("SPY")
+        self.qqq = Ticker("QQQ")
+        self.signal = Signal(
+            self.id, self.name, self.sentiment, self.date, [self.spy, self.qqq]
+        )
 
     def test_name(self):
         self.assertEqual(self.signal.name, self.name)
@@ -23,6 +27,9 @@ class TestSignal(unittest.TestCase):
 
     def test_date(self):
         self.assertEqual(self.signal.date, self.date)
+
+    def test_ticker(self):
+        self.assertEqual(self.signal.tickers, [self.spy, self.qqq])
 
     def test_eq(self):
         self.assertEqual(self.signal, self.signal)

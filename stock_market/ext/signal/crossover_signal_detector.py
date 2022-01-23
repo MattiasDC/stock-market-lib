@@ -70,12 +70,24 @@ class CrossoverSignalDetector(SignalDetector):
             if date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH:
                 sequence = add_signal(
                     sequence,
-                    Signal(self.id, self.name, self.__sentiment, date_and_value.date),
+                    Signal(
+                        self.id,
+                        self.name,
+                        self.__sentiment,
+                        date_and_value.date,
+                        [self.ticker],
+                    ),
                 )
             elif date_and_value.value < 0 and self.__sentiment == Sentiment.BEARISH:
                 sequence = add_signal(
                     sequence,
-                    Signal(self.id, self.name, self.__sentiment, date_and_value.date),
+                    Signal(
+                        self.id,
+                        self.name,
+                        self.__sentiment,
+                        date_and_value.date,
+                        [self.ticker],
+                    ),
                 )
         return sequence
 

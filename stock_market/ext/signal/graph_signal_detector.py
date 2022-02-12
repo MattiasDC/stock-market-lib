@@ -79,22 +79,18 @@ class GraphSignalDetectorBuilder:
     def add_signal_description(self, signal_state, sentiment, enter_or_exit):
         assert signal_state in self.state_descriptions
         signal_description = (signal_state, sentiment, enter_or_exit)
-        assert signal_description not in self.signal_states
+        assert signal_description not in self.signal_descriptions
         builder = copy.deepcopy(self)
         builder.signal_descriptions.append(signal_description)
         return builder
 
-    def add_transition(self, transition):
-        assert isinstance(transition, dict)
-        assert "source" in transition
-        assert "dest" in transition
-        assert "trigger" in transition
-        assert transition["source"] in self.state_descriptions
-        assert transition["dest"] in self.state_descriptions
-        assert transition["trigger"] in [d.id for d in self.detectors]
+    def add_transition(self, source, dest, trigger):
+        assert source in self.state_descriptions
+        assert dest in self.state_descriptions
+        assert trigger in [d.id for d in self.detectors]
 
         builder = copy.deepcopy(self)
-        builder.transitions.append(transition)
+        builder.transitions.append({"source": source, "dest": dest, "trigger": trigger})
         return builder
 
     @staticmethod

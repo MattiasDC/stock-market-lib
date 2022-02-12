@@ -48,8 +48,6 @@ class Signal:
             return False
 
         assert (self.id == other.id) == (self.name == other.name)
-        assert (self.id != other.id) or (self.sentiment == other.sentiment)
-
         return (self.id, self.date) == (other.id, other.date)
 
     def to_json(self):

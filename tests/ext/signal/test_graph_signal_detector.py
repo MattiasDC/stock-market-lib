@@ -1,18 +1,21 @@
 import datetime as dt
 import unittest
 
+from stock_market.common.factory import Factory
 from stock_market.core import Sentiment, SignalSequence, StockMarket, Ticker
 from stock_market.ext.indicator import ExponentialMovingAverage, Identity
 from stock_market.ext.signal import (
     CrossoverSignalDetector,
     EnterOrExit,
+    GraphSignalDetector,
     GraphSignalDetectorBuilder,
+    register_signal_detector_factories,
 )
 from stock_market.ext.updater import YahooFinanceStockUpdater
 
 
 class TestGraphSignalDetector(unittest.TestCase):
-    def test_build_and_detect(self):
+    def test_graph_detector(self):
         arkk = Ticker("ARKK")
         start = dt.date(2020, 1, 1)
         end = dt.date(2020, 4, 1)
@@ -116,6 +119,12 @@ class TestGraphSignalDetector(unittest.TestCase):
 
         self.assertEqual(signals[1].date, dt.date(2020, 3, 25))
         self.assertEqual(signals[1].sentiment, Sentiment.BULLISH)
+
+        detector_factory = register_signal_detector_factories(Factory())
+        json_detector = GraphSignalDetector.from_json(
+            puru_hedge_detector.to_json(), detector_factory
+        )
+        self.assertEqual(puru_hedge_detector, json_detector)
 
 
 if __name__ == "__main__":

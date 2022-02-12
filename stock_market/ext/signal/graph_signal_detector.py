@@ -112,7 +112,12 @@ class GraphSignalDetectorBuilder:
                 else:
                     assert enter_or_exit == EnterOrExit.EXIT
                     exits.append(__get_signal_factory(sentiment))
-        return State(state_description, on_enter=enters, on_exit=exits)
+        return State(
+            state_description,
+            on_enter=enters,
+            on_exit=exits,
+            ignore_invalid_triggers=True,
+        )
 
     @staticmethod
     def __create_states(state_descriptions, signal_descriptions):
@@ -202,8 +207,6 @@ class GraphSignalDetector(SignalDetector):
 
         mutable_sequence = Mutable(sequence)
         for signal in signals.signals:
-            if str(signal.id) not in self.machine.get_triggers(self.__model.state):
-                continue
             self.__model.trigger(
                 str(signal.id),
                 self.id,
@@ -215,14 +218,32 @@ class GraphSignalDetector(SignalDetector):
 
         return mutable_sequence.get()
 
+    @staticmethod
+    def __eq_machines(first, second):
+        first_markup = first.markup
+        second_markup = second.markup
+        return (
+            first_markup["states"],
+            first_markup["transitions"],
+            first.models[0].state,
+        ) == (
+            second_markup["states"],
+            second_markup["transitions"],
+            second.models[0].state,
+        )
+
     def __eq__(self, other):
         if not isinstance(other, GraphSignalDetector):
             return False
-        return (self.ticker, sorted(self.detectors), self.machine, self.model,) == (
+
+        def get_id(detector):
+            return detector.id
+
+        if not GraphSignalDetector.__eq_machines(self.machine, other.machine):
+            return False
+        return (self.ticker, sorted(self.detectors, key=get_id)) == (
             other.ticker,
-            sorted(other.detectors),
-            other.machine,
-            other.model,
+            sorted(other.detectors, key=get_id),
         )
 
     @staticmethod
@@ -235,7 +256,9 @@ class GraphSignalDetector(SignalDetector):
                 "id": self.id,
                 "name": self.name,
                 "ticker": self.ticker.to_json(),
-                "signal_detectors": [sd.to_json() for sd in self.detectors],
+                "signal_detectors": [
+                    {"name": sd.NAME(), "config": sd.to_json()} for sd in self.detectors
+                ],
                 "machine": self.machine.markup,
             }
         )
@@ -253,3 +276,21 @@ class GraphSignalDetector(SignalDetector):
             ],
             MarkupMachine(markup=json_obj["machine"]),
         )
+
+    @staticmethod
+    def json_schema():
+        return {
+            "type": "object",
+            "properties": {
+                "id": {"type": "integer"},
+                "name": {"type": "string"},
+                "ticker": {"type": "string"},
+                "signal_detectors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                    },
+                },
+                "machine": {"type": "object"},
+            },
+        }

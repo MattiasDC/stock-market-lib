@@ -5,6 +5,7 @@ from .bi_monthly_signal_detector import BiMonthlySignalDetector
 from .crossover_signal_detector import CrossoverSignalDetector
 from .death_cross_signal_detector import DeathCrossSignalDetector
 from .golden_cross_signal_detector import GoldenCrossSignalDetector
+from .graph_signal_detector import GraphSignalDetector
 from .monthly_signal_detector import MonthlySignalDetector
 
 
@@ -34,5 +35,10 @@ def register_signal_detector_factories(factory):
         MonthlySignalDetector.NAME(),
         MonthlySignalDetector.from_json,
         MonthlySignalDetector.json_schema(),
+    )
+    factory.register(
+        GraphSignalDetector.NAME(),
+        lambda config: GraphSignalDetector.from_json(config, factory),
+        GraphSignalDetector.json_schema(),
     )
     return factory

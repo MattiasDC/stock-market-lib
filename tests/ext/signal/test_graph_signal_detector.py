@@ -125,6 +125,12 @@ class TestGraphSignalDetector(unittest.TestCase):
             puru_hedge_detector.to_json(), detector_factory
         )
         self.assertEqual(puru_hedge_detector, json_detector)
+        self.assertEqual(
+            puru_hedge_detector,
+            detector_factory.create(
+                GraphSignalDetector.NAME(), puru_hedge_detector.to_json()
+            ),
+        )
 
 
 if __name__ == "__main__":

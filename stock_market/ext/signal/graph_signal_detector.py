@@ -6,6 +6,7 @@ from transitions import State
 from transitions.extensions.markup import MarkupMachine
 from utils.functional import Mutable
 
+from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
 from stock_market.core import (
     Sentiment,
     Signal,
@@ -17,7 +18,16 @@ from stock_market.core import (
 )
 
 
-class EnterOrExit(Enum):
+class EnterOrExit(SingleAttributeJsonMixin, Enum):
+    @classmethod
+    @property
+    def JSON_ATTRIBUTE_NAME(cls):
+        return "value"
+
+    @classmethod
+    @property
+    def JSON_ATTRIBUTE_TYPE(cls):
+        return "string"
 
     ENTER = "ENTER"
     EXIT = "EXIT"
@@ -152,6 +162,49 @@ class GraphSignalDetectorBuilder:
                 self.signal_descriptions,
                 self.transitions,
             ),
+        )
+
+    def to_json(self):
+        return json.dumps(
+            {
+                "id": self.id,
+                "name": self.name,
+                "ticker": self.ticker.to_json(),
+                "signal_detectors": [
+                    {"name": sd.NAME(), "config": sd.to_json()} for sd in self.detectors
+                ],
+                "state_descriptions": self.state_descriptions,
+                "initial_state": self.initial_state,
+                "signal_descriptions": [
+                    (state, sentiment.to_json(), enter_or_exit.to_json())
+                    for state, sentiment, enter_or_exit in self.signal_descriptions
+                ],
+                "transitions": self.transitions,
+            }
+        )
+
+    @staticmethod
+    def from_json(json_str, signal_detector_factory):
+        json_obj = json.loads(json_str)
+        return GraphSignalDetectorBuilder(
+            json_obj["id"],
+            json_obj["name"],
+            Ticker.from_json(json_obj["ticker"]),
+            [
+                signal_detector_factory.create(config["name"], config["config"])
+                for config in json_obj["signal_detectors"]
+            ],
+            json_obj["state_descriptions"],
+            json_obj["initial_state"],
+            [
+                (
+                    state,
+                    Sentiment.from_json(sentiment),
+                    EnterOrExit.from_json(enter_or_exit),
+                )
+                for state, sentiment, enter_or_exit in json_obj["signal_descriptions"]
+            ],
+            json_obj["transitions"],
         )
 
 

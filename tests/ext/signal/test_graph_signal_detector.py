@@ -15,12 +15,13 @@ from stock_market.ext.updater import YahooFinanceStockUpdater
 
 
 class TestGraphSignalDetector(unittest.TestCase):
-    def test_graph_detector(self):
+    def setUp(self):
+
         arkk = Ticker("ARKK")
-        start = dt.date(2020, 1, 1)
-        end = dt.date(2020, 4, 1)
-        sm = StockMarket(start, [arkk])
-        sm = YahooFinanceStockUpdater().update(end, sm)
+        self.start = dt.date(2020, 1, 1)
+        self.end = dt.date(2020, 4, 1)
+        sm = StockMarket(self.start, [arkk])
+        self.sm = YahooFinanceStockUpdater().update(self.end, sm)
 
         bearish_ema_50_crossover = CrossoverSignalDetector(
             1,
@@ -108,9 +109,14 @@ class TestGraphSignalDetector(unittest.TestCase):
         builder = builder.add_transition(
             "bear5/7", "none", bullish_ema_5_7_crossover.id
         )
-        puru_hedge_detector = builder.build()
+        self.builder = builder
+        self.puru_hedge_detector = builder.build()
 
-        sequence = puru_hedge_detector.detect(start, end, sm, SignalSequence())
+    def test_detector_signals(self):
+
+        sequence = self.puru_hedge_detector.detect(
+            self.start, self.end, self.sm, SignalSequence()
+        )
         signals = sequence.signals
         self.assertEqual(len(signals), 2)
 
@@ -120,16 +126,29 @@ class TestGraphSignalDetector(unittest.TestCase):
         self.assertEqual(signals[1].date, dt.date(2020, 3, 25))
         self.assertEqual(signals[1].sentiment, Sentiment.BULLISH)
 
+    def test_detector_json(self):
         detector_factory = register_signal_detector_factories(Factory())
         json_detector = GraphSignalDetector.from_json(
-            puru_hedge_detector.to_json(), detector_factory
+            self.puru_hedge_detector.to_json(), detector_factory
         )
-        self.assertEqual(puru_hedge_detector, json_detector)
+        self.assertEqual(self.puru_hedge_detector, json_detector)
+
+    def test_detector_factory(self):
+        detector_factory = register_signal_detector_factories(Factory())
         self.assertEqual(
-            puru_hedge_detector,
+            self.puru_hedge_detector,
             detector_factory.create(
-                GraphSignalDetector.NAME(), puru_hedge_detector.to_json()
+                GraphSignalDetector.NAME(), self.puru_hedge_detector.to_json()
             ),
+        )
+
+    def test_builder_json(self):
+        detector_factory = register_signal_detector_factories(Factory())
+        self.assertEqual(
+            self.puru_hedge_detector,
+            GraphSignalDetectorBuilder.from_json(
+                self.builder.to_json(), detector_factory
+            ).build(),
         )
 
 

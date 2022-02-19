@@ -12,7 +12,6 @@ from stock_market.core import (
     Signal,
     SignalDetector,
     SignalSequence,
-    Ticker,
     add_signal,
     merge_signals,
 )
@@ -38,7 +37,6 @@ class GraphSignalDetectorBuilder:
         self,
         identifier,
         name=None,
-        ticker=None,
         detectors=None,
         state_descriptions=None,
         initial_state=None,
@@ -47,7 +45,6 @@ class GraphSignalDetectorBuilder:
     ):
         self.id = identifier
         self.name = name
-        self.ticker = ticker
         self.detectors = [] if detectors is None else detectors
         self.state_descriptions = (
             [] if state_descriptions is None else state_descriptions
@@ -61,11 +58,6 @@ class GraphSignalDetectorBuilder:
     def set_name(self, name):
         builder = copy.deepcopy(self)
         builder.name = name
-        return builder
-
-    def set_ticker(self, ticker):
-        builder = copy.deepcopy(self)
-        builder.ticker = ticker
         return builder
 
     def add_detector(self, detector):
@@ -154,7 +146,6 @@ class GraphSignalDetectorBuilder:
         return GraphSignalDetector(
             self.id,
             self.name,
-            self.ticker,
             self.detectors,
             GraphSignalDetectorBuilder.__create_machine(
                 self.state_descriptions,
@@ -169,7 +160,6 @@ class GraphSignalDetectorBuilder:
             {
                 "id": self.id,
                 "name": self.name,
-                "ticker": self.ticker.to_json(),
                 "signal_detectors": [
                     {"name": sd.NAME(), "config": sd.to_json()} for sd in self.detectors
                 ],
@@ -189,7 +179,6 @@ class GraphSignalDetectorBuilder:
         return GraphSignalDetectorBuilder(
             json_obj["id"],
             json_obj["name"],
-            Ticker.from_json(json_obj["ticker"]),
             [
                 signal_detector_factory.create(config["name"], config["config"])
                 for config in json_obj["signal_detectors"]
@@ -217,21 +206,19 @@ class GraphSignalDetector(SignalDetector):
         self,
         identifier,
         name,
-        ticker,
         detectors,
         machine,
     ):
         super().__init__(identifier, name)
-        self.ticker = ticker
         self.detectors = detectors
         self.machine = machine
 
     @staticmethod
     def add_state_signal(
-        identifier, name, date, ticker, mutable_signal_sequence, sentiment
+        identifier, name, date, mutable_signal_sequence, tickers, sentiment
     ):
         ss = mutable_signal_sequence.get()
-        new_ss = add_signal(ss, Signal(identifier, name, sentiment, date, [ticker]))
+        new_ss = add_signal(ss, Signal(identifier, name, sentiment, date, tickers))
         mutable_signal_sequence.set(new_ss)
 
     @staticmethod
@@ -245,6 +232,16 @@ class GraphSignalDetector(SignalDetector):
     @staticmethod
     def add_neutral_signal(*args):
         GraphSignalDetector.add_state_signal(*args, Sentiment.NEUTRAL)
+
+    @property
+    def __tickers(self):
+        tickers = set()
+        for d in self.detectors:
+            if hasattr(d, "ticker"):
+                tickers.add(d.ticker)
+            if hasattr(d, "tickers"):
+                tickers |= d.tickers
+        return list(tickers)
 
     @property
     def __model(self):
@@ -265,8 +262,8 @@ class GraphSignalDetector(SignalDetector):
                 self.id,
                 self.name,
                 signal.date,
-                self.ticker,
                 mutable_sequence,
+                self.__tickers,
             )
 
         return mutable_sequence.get()
@@ -294,10 +291,7 @@ class GraphSignalDetector(SignalDetector):
 
         if not GraphSignalDetector.__eq_machines(self.machine, other.machine):
             return False
-        return (self.ticker, sorted(self.detectors, key=get_id)) == (
-            other.ticker,
-            sorted(other.detectors, key=get_id),
-        )
+        return sorted(self.detectors, key=get_id) == sorted(other.detectors, key=get_id)
 
     @staticmethod
     def NAME():
@@ -308,7 +302,6 @@ class GraphSignalDetector(SignalDetector):
             {
                 "id": self.id,
                 "name": self.name,
-                "ticker": self.ticker.to_json(),
                 "signal_detectors": [
                     {"name": sd.NAME(), "config": sd.to_json()} for sd in self.detectors
                 ],
@@ -322,7 +315,6 @@ class GraphSignalDetector(SignalDetector):
         return GraphSignalDetector(
             json_obj["id"],
             json_obj["name"],
-            Ticker.from_json(json_obj["ticker"]),
             [
                 signal_detector_factory.create(config["name"], config["config"])
                 for config in json_obj["signal_detectors"]
@@ -337,7 +329,6 @@ class GraphSignalDetector(SignalDetector):
             "properties": {
                 "id": {"type": "integer"},
                 "name": {"type": "string"},
-                "ticker": {"type": "string"},
                 "signal_detectors": {
                     "type": "array",
                     "items": {

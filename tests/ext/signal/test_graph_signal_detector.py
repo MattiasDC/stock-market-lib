@@ -17,16 +17,16 @@ from stock_market.ext.updater import YahooFinanceStockUpdater
 class TestGraphSignalDetector(unittest.TestCase):
     def setUp(self):
 
-        arkk = Ticker("ARKK")
+        self.arkk = Ticker("ARKK")
         self.start = dt.date(2020, 1, 1)
         self.end = dt.date(2020, 4, 1)
-        sm = StockMarket(self.start, [arkk])
+        sm = StockMarket(self.start, [self.arkk])
         self.sm = YahooFinanceStockUpdater().update(self.end, sm)
 
         bearish_ema_50_crossover = CrossoverSignalDetector(
             1,
             "bear ema(50)",
-            arkk,
+            self.arkk,
             Identity(),
             ExponentialMovingAverage(50),
             Sentiment.BEARISH,
@@ -34,7 +34,7 @@ class TestGraphSignalDetector(unittest.TestCase):
         bearish_ema_5_7_crossover = CrossoverSignalDetector(
             2,
             "bear ema(5-7)",
-            arkk,
+            self.arkk,
             ExponentialMovingAverage(5),
             ExponentialMovingAverage(7),
             Sentiment.BEARISH,
@@ -42,7 +42,7 @@ class TestGraphSignalDetector(unittest.TestCase):
         bullish_ema_5_7_crossover = CrossoverSignalDetector(
             3,
             "bear ema(5-7)",
-            arkk,
+            self.arkk,
             ExponentialMovingAverage(5),
             ExponentialMovingAverage(7),
             Sentiment.BULLISH,
@@ -50,7 +50,7 @@ class TestGraphSignalDetector(unittest.TestCase):
         bullish_ema_50_crossover = CrossoverSignalDetector(
             4,
             "bull ema(50)",
-            arkk,
+            self.arkk,
             Identity(),
             ExponentialMovingAverage(50),
             Sentiment.BULLISH,
@@ -73,7 +73,6 @@ class TestGraphSignalDetector(unittest.TestCase):
         """
         builder = GraphSignalDetectorBuilder(0)
         builder = builder.set_name("puru hedge")
-        builder = builder.set_ticker(arkk)
         builder = builder.add_detector(bearish_ema_50_crossover)
         builder = builder.add_detector(bearish_ema_5_7_crossover)
         builder = builder.add_detector(bullish_ema_5_7_crossover)
@@ -122,9 +121,11 @@ class TestGraphSignalDetector(unittest.TestCase):
 
         self.assertEqual(signals[0].date, dt.date(2020, 2, 25))  # corona crisis
         self.assertEqual(signals[0].sentiment, Sentiment.BEARISH)
+        self.assertEqual(signals[0].tickers, [self.arkk])
 
         self.assertEqual(signals[1].date, dt.date(2020, 3, 25))
         self.assertEqual(signals[1].sentiment, Sentiment.BULLISH)
+        self.assertEqual(signals[1].tickers, [self.arkk])
 
     def test_detector_json(self):
         detector_factory = register_signal_detector_factories(Factory())

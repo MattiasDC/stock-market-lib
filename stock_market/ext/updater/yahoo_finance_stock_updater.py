@@ -1,6 +1,7 @@
 import datetime
 import json
 
+import requests
 import yahoo_fin.stock_info as yf
 from utils.logging import get_logger
 
@@ -38,6 +39,8 @@ class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
         # Occurs when no data could be retrieved for the interval
         # (e.g. only weekend interval, bug in yahoo_fin)
         except KeyError:
+            return None
+        except requests.exceptions.ConnectionError:
             return None
 
         if len(ticker_hist.date) == 0:

@@ -99,14 +99,15 @@ class GraphSignalDetectorBuilder:
     def __create_state(state_description, signal_descriptions):
         def __get_signal_factory(sentiment):
             if sentiment == Sentiment.BULLISH:
-                return GraphSignalDetector.add_bullish_signal
+                return add_bullish_signal
             elif sentiment == Sentiment.BEARISH:
-                return GraphSignalDetector.add_bearish_signal
+                return add_bearish_signal
             assert sentiment == Sentiment.NEUTRAL
-            return GraphSignalDetector.add_neutral_signal
+            return add_neutral_signal
 
         enters = []
         exits = []
+        assert signal_descriptions is not None and len(signal_descriptions) > 0
         for state, sentiment, enter_or_exit in signal_descriptions:
             if state == state_description:
                 if enter_or_exit == EnterOrExit.ENTER:
@@ -123,6 +124,7 @@ class GraphSignalDetectorBuilder:
 
     @staticmethod
     def __create_states(state_descriptions, signal_descriptions):
+        assert state_descriptions is not None and len(state_descriptions) > 0
         return [
             GraphSignalDetectorBuilder.__create_state(s, signal_descriptions)
             for s in state_descriptions
@@ -132,6 +134,7 @@ class GraphSignalDetectorBuilder:
     def __create_machine(
         state_descriptions, initial_state, signal_descriptions, transitions
     ):
+        assert initial_state is not None
         transitions = [t | {"trigger": str(t["trigger"])} for t in transitions]
         return MarkupMachine(
             model=Model(),
@@ -143,6 +146,8 @@ class GraphSignalDetectorBuilder:
         )
 
     def build(self):
+        assert self.name is not None
+        assert self.detectors is not None
         return GraphSignalDetector(
             self.id,
             self.name,
@@ -220,18 +225,6 @@ class GraphSignalDetector(SignalDetector):
         ss = mutable_signal_sequence.get()
         new_ss = add_signal(ss, Signal(identifier, name, sentiment, date, tickers))
         mutable_signal_sequence.set(new_ss)
-
-    @staticmethod
-    def add_bullish_signal(*args):
-        GraphSignalDetector.add_state_signal(*args, Sentiment.BULLISH)
-
-    @staticmethod
-    def add_bearish_signal(*args):
-        GraphSignalDetector.add_state_signal(*args, Sentiment.BEARISH)
-
-    @staticmethod
-    def add_neutral_signal(*args):
-        GraphSignalDetector.add_state_signal(*args, Sentiment.NEUTRAL)
 
     @property
     def __tickers(self):
@@ -338,3 +331,15 @@ class GraphSignalDetector(SignalDetector):
                 "machine": {"type": "object"},
             },
         }
+
+
+def add_bullish_signal(*args):
+    GraphSignalDetector.add_state_signal(*args, Sentiment.BULLISH)
+
+
+def add_bearish_signal(*args):
+    GraphSignalDetector.add_state_signal(*args, Sentiment.BEARISH)
+
+
+def add_neutral_signal(*args):
+    GraphSignalDetector.add_state_signal(*args, Sentiment.NEUTRAL)

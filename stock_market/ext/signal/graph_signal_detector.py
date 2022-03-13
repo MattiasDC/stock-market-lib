@@ -96,14 +96,14 @@ class GraphSignalDetectorBuilder:
         return builder
 
     @staticmethod
-    def __create_state(state_description, signal_descriptions):
+    def __create_state(state_description, signal_descriptions, model):
         def __get_signal_factory(sentiment):
             if sentiment == Sentiment.BULLISH:
-                return add_bullish_signal
+                return model.add_bullish_signal
             elif sentiment == Sentiment.BEARISH:
-                return add_bearish_signal
+                return model.add_bearish_signal
             assert sentiment == Sentiment.NEUTRAL
-            return add_neutral_signal
+            return model.add_neutral_signal
 
         enters = []
         exits = []
@@ -123,10 +123,10 @@ class GraphSignalDetectorBuilder:
         )
 
     @staticmethod
-    def __create_states(state_descriptions, signal_descriptions):
+    def __create_states(state_descriptions, signal_descriptions, model):
         assert state_descriptions is not None and len(state_descriptions) > 0
         return [
-            GraphSignalDetectorBuilder.__create_state(s, signal_descriptions)
+            GraphSignalDetectorBuilder.__create_state(s, signal_descriptions, model)
             for s in state_descriptions
         ]
 
@@ -136,10 +136,11 @@ class GraphSignalDetectorBuilder:
     ):
         assert initial_state is not None
         transitions = [t | {"trigger": str(t["trigger"])} for t in transitions]
+        model = Model()
         return MarkupMachine(
-            model=Model(),
+            model=model,
             states=GraphSignalDetectorBuilder.__create_states(
-                state_descriptions, signal_descriptions
+                state_descriptions, signal_descriptions, model
             ),
             initial=initial_state,
             transitions=transitions,
@@ -203,7 +204,17 @@ class GraphSignalDetectorBuilder:
 
 
 class Model:
-    pass
+    @staticmethod
+    def add_bullish_signal(*args):
+        GraphSignalDetector.add_state_signal(*args, Sentiment.BULLISH)
+
+    @staticmethod
+    def add_bearish_signal(*args):
+        GraphSignalDetector.add_state_signal(*args, Sentiment.BEARISH)
+
+    @staticmethod
+    def add_neutral_signal(*args):
+        GraphSignalDetector.add_state_signal(*args, Sentiment.NEUTRAL)
 
 
 class GraphSignalDetector(SignalDetector):
@@ -331,15 +342,3 @@ class GraphSignalDetector(SignalDetector):
                 "machine": {"type": "object"},
             },
         }
-
-
-def add_bullish_signal(*args):
-    GraphSignalDetector.add_state_signal(*args, Sentiment.BULLISH)
-
-
-def add_bearish_signal(*args):
-    GraphSignalDetector.add_state_signal(*args, Sentiment.BEARISH)
-
-
-def add_neutral_signal(*args):
-    GraphSignalDetector.add_state_signal(*args, Sentiment.NEUTRAL)

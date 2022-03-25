@@ -48,7 +48,6 @@ class SignalSequence:
 
 
 def add_signal(sequence, signal):
-    assert signal not in sequence.signals, str((sequence.signals, signal))
     assert not sequence.signals or signal.date >= sequence.signals[-1].date, str(
         (sequence.signals, signal)
     )

@@ -42,16 +42,19 @@ class TimeSeries:
     def time_values(self):
         return self.__day_data
 
-    """
-    Trims the series at the start of the series to keep 'days' days
-    """
-
     def keep_recent_days(self, days):
+        """Trims the series at the start of the series to keep 'days' days"""
         return TimeSeries(
             self.name,
             self.time_values.loc[
                 self.time_values.date > self.end - datetime.timedelta(days=days)
             ],
+        )
+
+    def start_at(self, start_date):
+        """Trims the series to only contain values at or after the given start date"""
+        return TimeSeries(
+            self.name, self.time_values.loc[self.time_values.date >= start_date]
         )
 
     def __eq__(self, other):

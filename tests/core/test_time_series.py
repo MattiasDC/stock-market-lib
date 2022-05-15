@@ -48,6 +48,16 @@ class TestTimeSeries(unittest.TestCase):
         self.assertEqual(trimmed_series.duration, dt.timedelta(days=month_days - 1))
         self.assertEqual(trimmed_series.end, self.ts.end)
 
+    def test_start_at(self):
+        same_series = self.ts.start_at(self.ts.start)
+        self.assertEqual(same_series, self.ts)
+        trimmed_series = self.ts.start_at(self.ts.start + dt.timedelta(days=2))
+        print(trimmed_series.start)
+        print(self.ts.start + dt.timedelta(days=2))
+        self.assertTrue(trimmed_series.start >= self.ts.start + dt.timedelta(days=2))
+        single_value_series = self.ts.start_at(self.ts.end)
+        self.assertEqual(len(single_value_series.values), 1)
+
     def test_eq(self):
         self.assertEqual(self.ts, self.ts)
         self.assertNotEqual(self.ts, 0)

@@ -18,7 +18,7 @@ class TestGraphSignalDetector(unittest.TestCase):
     def setUp(self):
 
         self.arkk = Ticker("ARKK")
-        self.start = dt.date(2020, 1, 1)
+        self.start = dt.date(2019, 12, 15)
         self.end = dt.date(2020, 4, 1)
         sm = StockMarket(self.start, [self.arkk])
         self.sm = YahooFinanceStockUpdater().update(self.end, sm)
@@ -117,15 +117,24 @@ class TestGraphSignalDetector(unittest.TestCase):
             self.start, self.end, self.sm, SignalSequence()
         )
         signals = sequence.signals
-        self.assertEqual(len(signals), 2)
+        print(signals)
+        self.assertEqual(len(signals), 4)
 
         self.assertEqual(signals[0].date, dt.date(2020, 2, 25))  # corona crisis
         self.assertEqual(signals[0].sentiment, Sentiment.BEARISH)
         self.assertEqual(signals[0].tickers, [self.arkk])
 
-        self.assertEqual(signals[1].date, dt.date(2020, 3, 25))
+        self.assertEqual(signals[1].date, dt.date(2020, 3, 4))
         self.assertEqual(signals[1].sentiment, Sentiment.BULLISH)
         self.assertEqual(signals[1].tickers, [self.arkk])
+
+        self.assertEqual(signals[2].date, dt.date(2020, 3, 5))
+        self.assertEqual(signals[2].sentiment, Sentiment.BEARISH)
+        self.assertEqual(signals[2].tickers, [self.arkk])
+
+        self.assertEqual(signals[3].date, dt.date(2020, 3, 25))
+        self.assertEqual(signals[3].sentiment, Sentiment.BULLISH)
+        self.assertEqual(signals[3].tickers, [self.arkk])
 
     def test_detector_json(self):
         detector_factory = register_signal_detector_factories(Factory())

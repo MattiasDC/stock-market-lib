@@ -3,6 +3,7 @@ import json
 
 import numpy as np
 import pandas as pd
+from dateutil.rrule import DAILY, FR, MO, TH, TU, WE, rrule
 
 from stock_market.core import (
     Sentiment,
@@ -63,8 +64,13 @@ class CrossoverSignalDetector(SignalDetector):
         for _, date_and_value in relevant_differences.loc[
             crossovers_indices
         ].iterrows():
-            if date_and_value.date < stock_market.start_date + dt.timedelta(
-                days=self.__unresponsive_indicator_getter.lag_days()
+            if (
+                date_and_value.date
+                < rrule(
+                    DAILY,
+                    dtstart=stock_market.start_date,
+                    byweekday=(MO, TU, WE, TH, FR),
+                )[self.__unresponsive_indicator_getter.lag_days()].date()
             ):
                 continue  # Unresponsive getter has not been completely setup yet
             if date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH:

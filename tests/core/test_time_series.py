@@ -1,5 +1,4 @@
 import datetime as dt
-import unittest
 
 import dateparser
 import pandas as pd
@@ -8,7 +7,7 @@ from stock_market.core import TimeSeries
 from stock_market.core.time_series import make_relative
 
 
-class TestTimeSeries(unittest.TestCase):
+class TestTimeSeries:
     def setUp(self):
         self.raw_data = pd.read_csv("tests/data/SPY.csv")
         self.ts = TimeSeries("Close", self.raw_data[["Date", "Close"]])
@@ -161,7 +160,3 @@ class TestTimeSeries(unittest.TestCase):
                 ),
             ),
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

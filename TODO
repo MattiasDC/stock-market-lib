@@ -1,1 +1,4 @@
+test stockupdater.__getperiod
+
 use ta package - create json schema models + creator?
+use yahoo_fin_async instead of non-async

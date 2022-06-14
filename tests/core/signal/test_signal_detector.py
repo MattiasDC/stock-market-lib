@@ -1,25 +1,29 @@
 import datetime
-import unittest
+
+import pytest
 
 from stock_market.core import SignalDetector, StockMarket
 
 
-class TestSignalDetector(unittest.TestCase):
-    def setUp(self):
-        self.name = "TestSignal"
-        self.id = 1
-
-    def test_name(self):
-        self.assertEqual(SignalDetector(self.id, self.name).name, self.name)
-
-    def test_identifier(self):
-        self.assertEqual(SignalDetector(self.id, self.name).id, self.id)
-
-    def test_is_valid(self):
-        start = datetime.date(2000, 1, 1)
-        sm = StockMarket(start, [])
-        self.assertTrue(SignalDetector(self.id, self.name).is_valid(sm))
+@pytest.fixture
+def name():
+    return "TestSignal"
 
 
-if __name__ == "__main__":
-    unittest.main()
+@pytest.fixture
+def identifier():
+    return 1
+
+
+def test_name(identifier, name):
+    assert SignalDetector(identifier, name).name == name
+
+
+def test_identifier(identifier, name):
+    assert SignalDetector(identifier, name).id == identifier
+
+
+def test_is_valid(identifier, name):
+    start = datetime.date(2000, 1, 1)
+    sm = StockMarket(start, [])
+    assert SignalDetector(identifier, name).is_valid(sm)

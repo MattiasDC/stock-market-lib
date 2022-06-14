@@ -1,5 +1,4 @@
 import json
-import unittest
 
 from stock_market.common.factory import Factory
 from stock_market.ext.signal import (
@@ -9,41 +8,37 @@ from stock_market.ext.signal import (
 )
 
 
-class TestFactory(unittest.TestCase):
-    def test_create(self):
-        factory = Factory()
-        register_signal_detector_factories(factory)
-        self.assertEqual(
-            factory.create(MonthlySignalDetector.NAME(), json.dumps(1)),
-            MonthlySignalDetector(1),
-        )
-        self.assertEqual(
-            factory.create(BiMonthlySignalDetector.NAME(), json.dumps(1)),
-            BiMonthlySignalDetector(1),
-        )
-
-    def test_register(self):
-        factory = Factory()
-        factory.register(
-            "m", MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema()
-        )
-        self.assertEqual(factory.create("m", json.dumps(1)), MonthlySignalDetector(1))
-
-    def test_registered_names(self):
-        factory = Factory()
-        self.assertFalse("m" in factory.get_registered_names())
-        factory.register(
-            "m", MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema()
-        )
-        self.assertTrue("m" in factory.get_registered_names())
-
-    def test_get_schema(self):
-        factory = Factory()
-        factory.register(
-            "m", MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema()
-        )
-        self.assertNotEqual(factory.get_schema("m"), None)
+def test_create():
+    factory = Factory()
+    register_signal_detector_factories(factory)
+    assert factory.create(
+        MonthlySignalDetector.NAME(), json.dumps(1)
+    ) == MonthlySignalDetector(1)
+    assert factory.create(
+        BiMonthlySignalDetector.NAME(), json.dumps(1)
+    ) == BiMonthlySignalDetector(1)
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_register():
+    factory = Factory()
+    factory.register(
+        "m", MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema()
+    )
+    assert factory.create("m", json.dumps(1)) == MonthlySignalDetector(1)
+
+
+def test_registered_names():
+    factory = Factory()
+    assert not ("m" in factory.get_registered_names())
+    factory.register(
+        "m", MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema()
+    )
+    assert "m" in factory.get_registered_names()
+
+
+def test_get_schema():
+    factory = Factory()
+    factory.register(
+        "m", MonthlySignalDetector.from_json, MonthlySignalDetector.json_schema()
+    )
+    assert factory.get_schema("m") is not None

@@ -1,30 +1,31 @@
-import unittest
-
 import pandas as pd
+import pytest
 
 from stock_market.core import OHLC, Ticker, TickerOHLC
 
 
-class TestTickerOHLC(unittest.TestCase):
-    def setUp(self):
-        self.ticker = Ticker("Test")
-        self.raw_data = pd.read_csv("tests/data/SPY.csv")
-        self.ohlc = OHLC(
-            self.raw_data.Date,
-            self.raw_data.Open,
-            self.raw_data.High,
-            self.raw_data.Low,
-            self.raw_data.Close,
-        )
-
-    def test_ticker(self):
-        ticker_ohlc = TickerOHLC(self.ticker, self.ohlc)
-        self.assertEqual(ticker_ohlc.ticker, self.ticker)
-
-    def test_ohlc(self):
-        ticker_ohlc = TickerOHLC(self.ticker, self.ohlc)
-        self.assertEqual(ticker_ohlc.ohlc, self.ohlc)
+@pytest.fixture
+def ticker():
+    return Ticker("Test")
 
 
-if __name__ == "__main__":
-    unittest.main()
+@pytest.fixture
+def ohlc():
+    raw_data = pd.read_csv("tests/data/SPY.csv")
+    return OHLC(
+        raw_data.Date,
+        raw_data.Open,
+        raw_data.High,
+        raw_data.Low,
+        raw_data.Close,
+    )
+
+
+def test_ticker(ticker, ohlc):
+    ticker_ohlc = TickerOHLC(ticker, ohlc)
+    assert ticker_ohlc.ticker == ticker
+
+
+def test_ohlc(ticker, ohlc):
+    ticker_ohlc = TickerOHLC(ticker, ohlc)
+    assert ticker_ohlc.ohlc == ohlc

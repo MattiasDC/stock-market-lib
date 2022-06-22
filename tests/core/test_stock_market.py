@@ -73,6 +73,6 @@ def test_eq(sm):
     assert sm != 0
 
 
-def test_json(sm, date, spy):
+def test_json(sm, date, spy, ohlc):
     sm = sm.update_ticker(TickerOHLC(spy, ohlc))
     assert sm == StockMarket.from_json(sm.to_json())

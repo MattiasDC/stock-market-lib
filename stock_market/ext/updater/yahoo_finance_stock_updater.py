@@ -1,4 +1,3 @@
-import datetime
 import json
 
 import requests
@@ -16,9 +15,6 @@ logger = get_logger(__name__)
 class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
     def __init__(self):
         super().__init__("yahoo")
-
-    def __get_period(self, stock_market, ohlc, date):
-        return ohlc.end, date
 
     def __get_ohlc(self, start, end, ticker):
         ticker_hist = None
@@ -54,14 +50,8 @@ class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
         )
 
     def __update_ticker(self, date, stock_market, ticker):
-        date_inclusive = date + datetime.timedelta(days=1)
         ohlc = stock_market.ohlc(ticker)
-        if ohlc is None:
-            start = stock_market.start_date
-            end = date_inclusive
-        else:
-            start, end = self.__get_period(stock_market, ohlc, date_inclusive)
-
+        start, end = self._get_period(stock_market, ohlc, date)
         new_ohlc = self.__get_ohlc(start, end, ticker)
         if new_ohlc is not None:
             stock_market = stock_market.update_ticker(
@@ -69,7 +59,7 @@ class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
             )
         return stock_market
 
-    def update(self, date, stock_market):
+    async def update(self, date, stock_market):
         for ticker in stock_market.tickers:
             stock_market = self.__update_ticker(date, stock_market, ticker)
         return stock_market

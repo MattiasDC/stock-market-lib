@@ -1,6 +1,5 @@
-import datetime
+import datetime as dt
 import json
-import unittest
 
 from jsonschema import validate
 
@@ -8,22 +7,21 @@ from stock_market.core import StockMarket, Ticker
 from stock_market.ext.updater import YahooFinanceStockUpdater
 
 
-class TestYahooFinanceStockUpdater(unittest.TestCase):
-    def test_update(self):
-        spy = Ticker("SPY")
-        sm = StockMarket(datetime.date(2000, 1, 1), [spy])
-        self.assertEqual(sm.ohlc(spy), None)
-        sm = YahooFinanceStockUpdater().update(datetime.datetime.now().date(), sm)
-        self.assertNotEqual(sm.ohlc(spy), None)
-
-    def test_json(self):
-        updater = YahooFinanceStockUpdater()
-        json_str = updater.to_json()
-        self.assertEqual(YahooFinanceStockUpdater.from_json(json_str), updater)
-        validate(
-            instance=json.loads(json_str), schema=YahooFinanceStockUpdater.json_schema()
-        )
+async def test_update():
+    spy = Ticker("SPY")
+    sm = StockMarket(dt.date(2000, 1, 3), [spy])
+    assert sm.ohlc(spy) is None
+    new_date = dt.date(2022, 1, 5)
+    sm = await YahooFinanceStockUpdater().update(new_date, sm)
+    ohlc = sm.ohlc(spy)
+    assert ohlc is not None
+    assert ohlc.end == new_date
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_json():
+    updater = YahooFinanceStockUpdater()
+    json_str = updater.to_json()
+    assert YahooFinanceStockUpdater.from_json(json_str) == updater
+    validate(
+        instance=json.loads(json_str), schema=YahooFinanceStockUpdater.json_schema()
+    )

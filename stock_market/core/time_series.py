@@ -57,6 +57,19 @@ class TimeSeries:
             self.name, self.time_values.loc[self.time_values.date >= start_date]
         )
 
+    def end_at(self, end_date):
+        """Trims the series to only contain values before the given end date.
+        The end date is not included."""
+        return TimeSeries(
+            self.name, self.time_values.loc[self.time_values.date < end_date]
+        )
+
+    def trim(self, start_date, end_date):
+        """Trims the series to only contain values at or after the given start date and
+        before the given end date. The end date is not included."""
+        assert start_date < end_date
+        return self.start_at(start_date).end_at(end_date)
+
     def __eq__(self, other):
         if not isinstance(other, TimeSeries):
             return False

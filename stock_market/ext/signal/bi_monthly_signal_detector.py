@@ -2,7 +2,7 @@ import datetime as dt
 
 from dateutil.relativedelta import relativedelta
 
-from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
+from stock_market.common.json_mixins import SingleAttributeJsonMixin
 from stock_market.core import Sentiment, Signal, SignalDetector, add_signal
 
 

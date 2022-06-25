@@ -4,7 +4,7 @@ import requests
 import yahoo_fin.stock_info as yf
 from utils.logging import get_logger
 
-from stock_market.common.empty_json_mixin import EmptyJsonMixin
+from stock_market.common.json_mixins import EmptyJsonMixin
 from stock_market.core.ohlc import OHLC, merge_ohlcs
 from stock_market.core.stock_updater import StockUpdater
 from stock_market.core.ticker_ohlc import TickerOHLC

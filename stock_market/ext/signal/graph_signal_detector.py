@@ -6,7 +6,7 @@ from transitions import State
 from transitions.extensions.markup import MarkupMachine
 from utils.functional import Mutable
 
-from stock_market.common.single_attribute_json_mixin import SingleAttributeJsonMixin
+from stock_market.common.json_mixins import SingleAttributeJsonMixin
 from stock_market.core import (
     Sentiment,
     Signal,

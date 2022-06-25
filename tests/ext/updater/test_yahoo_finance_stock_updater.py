@@ -15,7 +15,7 @@ async def test_update():
     sm = await YahooFinanceStockUpdater().update(new_date, sm)
     ohlc = sm.ohlc(spy)
     assert ohlc is not None
-    assert ohlc.end == new_date
+    assert ohlc.end == new_date - dt.timedelta(days=1)
 
 
 def test_json():

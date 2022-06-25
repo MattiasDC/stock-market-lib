@@ -1,4 +1,6 @@
-test stockupdater.__getperiod
+test stockupdater._getperiod
+test timeseries.end_at, trim
+test ohlc.trim
 
 use ta package - create json schema models + creator?
 use yahoo_fin_async instead of non-async

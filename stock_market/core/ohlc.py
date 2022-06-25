@@ -69,6 +69,18 @@ class OHLC:
             self.close.keep_recent_days(days),
         )
 
+    def trim(self, start_date, end_date):
+        """Trims the OHCL to only contain values at or after the given start date
+        and before the given end date. The end date is not included."""
+        new_open = self.open.trim(start_date, end_date)
+        return OHLC.from_series(
+            new_open.dates,
+            new_open,
+            self.high.trim(start_date, end_date),
+            self.low.trim(start_date, end_date),
+            self.close.trim(start_date, end_date),
+        )
+
     def __eq__(self, other):
         if not isinstance(other, OHLC):
             return False

@@ -1,4 +1,4 @@
-from stock_market.common.empty_json_mixin import EmptyJsonMixin
+from stock_market.common.json_mixins import EmptyJsonMixin
 from stock_market.core import TimeSeries
 
 

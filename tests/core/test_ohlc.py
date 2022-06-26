@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 import dateparser
 import pandas as pd
@@ -52,10 +52,20 @@ def test_close(raw_data, ohlc):
 
 
 def test_keep_recent_days(ohlc):
-    trimmed = ohlc.keep_recent_days(10)
-    assert trimmed.end - trimmed.start == datetime.timedelta(days=9)
-    assert trimmed.end == ohlc.end
-    assert trimmed.start == ohlc.end - datetime.timedelta(days=9)
+    recent = ohlc.keep_recent_days(10)
+    assert recent.end - recent.start == dt.timedelta(days=9)
+    assert recent.end == ohlc.end
+    assert recent.start == ohlc.end - dt.timedelta(days=9)
+
+
+def test_trim(ohlc):
+    same_ohlc = ohlc.trim(ohlc.start, ohlc.end + dt.timedelta(days=1))
+    assert same_ohlc == ohlc
+    trimmed_ohlc = ohlc.trim(
+        ohlc.start + dt.timedelta(days=1), ohlc.end - dt.timedelta(days=2)
+    )
+    assert trimmed_ohlc.end <= ohlc.end + dt.timedelta(days=1)
+    assert trimmed_ohlc.start >= ohlc.start + dt.timedelta(days=2)
 
 
 def test_eq(ohlc):

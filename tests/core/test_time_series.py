@@ -64,6 +64,25 @@ def test_start_at(ts):
     assert len(single_value_series.values) == 1
 
 
+def test_end_at(ts):
+    same_series = ts.end_at(ts.end + dt.timedelta(days=1))
+    assert same_series == ts
+    trimmed_series = ts.end_at(ts.end - dt.timedelta(days=2))
+    assert trimmed_series.end <= ts.end + dt.timedelta(days=1)
+    single_value_series = ts.end_at(ts.start + dt.timedelta(days=1))
+    assert len(single_value_series.values) == 1
+
+
+def test_trim(ts):
+    same_series = ts.trim(ts.start, ts.end + dt.timedelta(days=1))
+    assert same_series == ts
+    trimmed_series = ts.trim(
+        ts.start + dt.timedelta(days=1), ts.end - dt.timedelta(days=2)
+    )
+    assert trimmed_series.end <= ts.end + dt.timedelta(days=1)
+    assert trimmed_series.start >= ts.start + dt.timedelta(days=2)
+
+
 def test_eq(ts):
     assert ts == ts
     assert ts != 0

@@ -32,7 +32,7 @@ class ProxyStockUpdater(StockUpdater, SingleAttributeJsonMixin):
                     "start_date": start_date.isoformat(),
                     "end_date": end_date.isoformat(),
                 },
-                json=[t.to_json() for t in tickers],
+                json={"tickers": [{"symbol": t.symbol} for t in tickers]},
             )
         ohlc_data = await response.json()
         for ticker, ohlc in ohlc_data.items():

@@ -28,11 +28,11 @@ class ProxyStockUpdater(StockUpdater, SingleAttributeJsonMixin):
         async with aiohttp.ClientSession() as client:
             response = await client.post(
                 self.api_url,
-                json={
+                params={
                     "start_date": start_date.isoformat(),
                     "end_date": end_date.isoformat(),
-                    "tickers": [t.to_json() for t in tickers],
                 },
+                json={"tickers": [t.to_json() for t in tickers]},
             )
         ohlc_data = await response.json()
         for ticker, ohlc in ohlc_data.items():

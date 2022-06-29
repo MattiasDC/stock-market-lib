@@ -12,7 +12,7 @@ class ProxyStockUpdater(StockUpdater, SingleAttributeJsonMixin):
     JSON_ATTRIBUTE_TYPE = "string"
 
     def __init__(self, api_url):
-        super().__init__(f"proxy '{api_url}'")
+        super().__init__("proxy")
         self.api_url = api_url
 
     async def update(self, date, stock_market):

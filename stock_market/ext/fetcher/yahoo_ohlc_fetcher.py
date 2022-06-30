@@ -48,8 +48,10 @@ class YahooOHLCFetcher(OHLCFetcher, EmptyJsonMixin):
         )
 
     async def fetch_ohlc(self, requests):
-        for start_date, end_date, ticker in requests:
-            yield ticker, self.fetch_single(start_date, end_date, ticker)
+        return [
+            (ticker, self.fetch_single(start_date, end_date, ticker))
+            for start_date, end_date, ticker in requests
+        ]
 
     def __eq__(self, other):
         return isinstance(other, YahooOHLCFetcher)

@@ -31,8 +31,10 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
                 },
             )
         ohlc_data = await response.json()
-        for ticker, ohlc in ohlc_data.items():
-            yield Ticker.from_json(ticker), OHLC.from_json(ohlc)
+        return [
+            (Ticker.from_json(ticker), OHLC.from_json(ohlc))
+            for ticker, ohlc in ohlc_data.items()
+        ]
 
     def __eq__(self, other):
         if not isinstance(other, ProxyOHLCFetcher):

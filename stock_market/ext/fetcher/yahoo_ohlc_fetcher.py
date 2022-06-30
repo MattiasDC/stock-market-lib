@@ -5,18 +5,16 @@ import yahoo_fin.stock_info as yf
 from utils.logging import get_logger
 
 from stock_market.common.json_mixins import EmptyJsonMixin
-from stock_market.core.ohlc import OHLC, merge_ohlcs
-from stock_market.core.stock_updater import StockUpdater
-from stock_market.core.ticker_ohlc import TickerOHLC
+from stock_market.core import OHLC, OHLCFetcher
 
 logger = get_logger(__name__)
 
 
-class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
+class YahooOHLCFetcher(OHLCFetcher, EmptyJsonMixin):
     def __init__(self):
         super().__init__("yahoo")
 
-    def __get_ohlc(self, start, end, ticker):
+    def fetch_single(self, start, end, ticker):
         ticker_hist = None
         try:
             ticker_hist = yf.get_data(
@@ -49,20 +47,9 @@ class YahooFinanceStockUpdater(StockUpdater, EmptyJsonMixin):
             ticker_hist.adjclose,
         )
 
-    def __update_ticker(self, date, stock_market, ticker):
-        ohlc = stock_market.ohlc(ticker)
-        start, end = self._get_period(stock_market, ohlc, date)
-        new_ohlc = self.__get_ohlc(start, end, ticker)
-        if new_ohlc is not None:
-            stock_market = stock_market.update_ticker(
-                TickerOHLC(ticker, merge_ohlcs(ohlc, new_ohlc))
-            )
-        return stock_market
-
-    async def update(self, date, stock_market):
-        for ticker in stock_market.tickers:
-            stock_market = self.__update_ticker(date, stock_market, ticker)
-        return stock_market
+    async def fetch_ohlc(self, requests):
+        for start_date, end_date, ticker in requests:
+            yield ticker, self.fetch_single(start_date, end_date, ticker)
 
     def __eq__(self, other):
-        return isinstance(other, YahooFinanceStockUpdater)
+        return isinstance(other, YahooOHLCFetcher)

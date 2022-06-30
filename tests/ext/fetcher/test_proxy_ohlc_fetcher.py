@@ -7,8 +7,8 @@ import pytest
 from aioresponses import CallbackResult
 from jsonschema import validate
 
-from stock_market.core import OHLC, StockMarket, Ticker
-from stock_market.ext.updater import ProxyStockUpdater
+from stock_market.core import OHLC, StockMarket, StockUpdater, Ticker
+from stock_market.ext.fetcher import ProxyOHLCFetcher
 
 
 @pytest.fixture
@@ -40,17 +40,22 @@ def mock_url():
 
 
 @pytest.fixture
-def proxy_updater(mock_url):
-    return ProxyStockUpdater(mock_url)
+def proxy_ohlc_fetcher(mock_url):
+    return ProxyOHLCFetcher(mock_url)
+
+
+@pytest.fixture
+def proxy_updater(proxy_ohlc_fetcher):
+    return StockUpdater(proxy_ohlc_fetcher)
 
 
 def create_response(
     ohlc, assert_ticker, assert_start_date, assert_end_date, urk, **kwargs
 ):
-    json_data = kwargs["json"]
+    json_data = kwargs["json"]["requests"][0]
     assert dt.date.fromisoformat(json_data["start_date"]) == assert_start_date
     assert dt.date.fromisoformat(json_data["end_date"]) == assert_end_date
-    assert [assert_ticker] == [Ticker.from_json(t) for t in json_data["tickers"]]
+    assert [assert_ticker] == [Ticker.from_json(json_data["ticker"])]
     return CallbackResult(body=json.dumps({assert_ticker.to_json(): ohlc.to_json()}))
 
 
@@ -71,7 +76,7 @@ async def test_update(
     assert ohlc.end == end_date - dt.timedelta(days=1)
 
 
-def test_json(proxy_updater):
-    json_str = proxy_updater.to_json()
-    assert ProxyStockUpdater.from_json(json_str) == proxy_updater
-    validate(instance=json.loads(json_str), schema=ProxyStockUpdater.json_schema())
+def test_json(proxy_ohlc_fetcher):
+    json_str = proxy_ohlc_fetcher.to_json()
+    assert ProxyOHLCFetcher.from_json(json_str) == proxy_ohlc_fetcher
+    validate(instance=json.loads(json_str), schema=ProxyOHLCFetcher.json_schema())

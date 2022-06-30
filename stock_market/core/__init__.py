@@ -1,4 +1,5 @@
 from .ohlc import OHLC  # noqa
+from .ohlc_fetcher import OHLCFetcher  # noqa
 from .signal import *  # noqa
 from .stock_market import StockMarket  # noqa
 from .stock_updater import StockUpdater  # noqa

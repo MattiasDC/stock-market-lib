@@ -3,9 +3,15 @@ import json
 
 from jsonschema import validate
 
-from stock_market.core import Sentiment, SignalSequence, StockMarket, Ticker
+from stock_market.core import (
+    Sentiment,
+    SignalSequence,
+    StockMarket,
+    StockUpdater,
+    Ticker,
+)
+from stock_market.ext.fetcher.yahoo_ohlc_fetcher import YahooOHLCFetcher
 from stock_market.ext.signal import GoldenCrossSignalDetector
-from stock_market.ext.updater import YahooFinanceStockUpdater
 
 
 async def test_detect():
@@ -13,7 +19,7 @@ async def test_detect():
     start = datetime.date(2019, 1, 1)
     end = datetime.date(2020, 10, 1)
     sm = StockMarket(start, [spy])
-    sm = await YahooFinanceStockUpdater().update(end, sm)
+    sm = await StockUpdater(YahooOHLCFetcher()).update(end, sm)
     sequence = SignalSequence()
     detector = GoldenCrossSignalDetector(1, spy)
     sequence = detector.detect(start, end, sm, sequence)

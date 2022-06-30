@@ -3,7 +3,14 @@ import datetime as dt
 import pytest
 
 from stock_market.common.factory import Factory
-from stock_market.core import Sentiment, SignalSequence, StockMarket, Ticker
+from stock_market.core import (
+    Sentiment,
+    SignalSequence,
+    StockMarket,
+    StockUpdater,
+    Ticker,
+)
+from stock_market.ext.fetcher import YahooOHLCFetcher
 from stock_market.ext.indicator import ExponentialMovingAverage, Identity
 from stock_market.ext.signal import (
     CrossoverSignalDetector,
@@ -12,7 +19,6 @@ from stock_market.ext.signal import (
     GraphSignalDetectorBuilder,
     register_signal_detector_factories,
 )
-from stock_market.ext.updater import YahooFinanceStockUpdater
 
 
 @pytest.fixture
@@ -33,7 +39,7 @@ def end():
 @pytest.fixture
 async def sm(start, end, arkk):
     stock_market = StockMarket(start, [arkk])
-    stock_market = await YahooFinanceStockUpdater().update(end, stock_market)
+    stock_market = await StockUpdater(YahooOHLCFetcher()).update(end, stock_market)
     return stock_market
 
 

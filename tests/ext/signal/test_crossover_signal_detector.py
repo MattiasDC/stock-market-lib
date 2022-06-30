@@ -10,16 +10,17 @@ from stock_market.core import (
     Sentiment,
     SignalSequence,
     StockMarket,
+    StockUpdater,
     Ticker,
     merge_signals,
 )
+from stock_market.ext.fetcher.yahoo_ohlc_fetcher import YahooOHLCFetcher
 from stock_market.ext.indicator import (
     ExponentialMovingAverage,
     Identity,
     register_indicator_factories,
 )
 from stock_market.ext.signal import CrossoverSignalDetector
-from stock_market.ext.updater import YahooFinanceStockUpdater
 
 
 def alternates_two_values(sequence):
@@ -85,7 +86,7 @@ async def test_detect():
     bearish_detector = CrossoverSignalDetector(
         1, "Bearish SPY Crossover EMA(20)", spy, Identity(), ema, Sentiment.BEARISH
     )
-    sm = await YahooFinanceStockUpdater().update(end, sm)
+    sm = await StockUpdater(YahooOHLCFetcher()).update(end, sm)
     bullish_signals = bullish_detector.detect(start_plus_10, end, sm, SignalSequence())
     bearish_signals = bearish_detector.detect(start_plus_10, end, sm, SignalSequence())
     signals = merge_signals(bullish_signals, bearish_signals)

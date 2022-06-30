@@ -6,6 +6,10 @@ class StockUpdater:
     def __init__(self, ohlc_fetcher):
         self.__ohlc_fetcher = ohlc_fetcher
 
+    @property
+    def name(self):
+        return self.__ohlc_fetcher.name
+
     def __update_ticker(self, stock_market, ticker, ohlc):
         if ohlc is None:
             return stock_market
@@ -27,3 +31,6 @@ class StockUpdater:
         async for ticker, ohlc in self.__ohlc_fetcher.fetch_ohlc(requests):
             stock_market = self.__update_ticker(stock_market, ticker, ohlc)
         return stock_market
+
+    def to_json(self):
+        return self.__ohlc_fetcher.to_json()

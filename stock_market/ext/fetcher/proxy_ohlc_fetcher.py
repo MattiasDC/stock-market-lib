@@ -16,18 +16,6 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
         self.api_url = api_url
 
     async def fetch_ohlc(self, requests):
-        print(
-            {
-                "requests": [
-                    {
-                        "start_date": start_date.isoformat(),
-                        "end_date": end_date.isoformat(),
-                        "ticker": ticker.symbol,
-                    }
-                    for start_date, end_date, ticker in requests
-                ]
-            }
-        )
         async with aiohttp.ClientSession() as client:
             response = await client.post(
                 self.api_url,

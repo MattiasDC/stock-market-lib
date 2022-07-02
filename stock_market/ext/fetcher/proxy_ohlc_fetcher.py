@@ -18,21 +18,24 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
         self.api_url = api_url
 
     async def fetch_ohlc(self, requests):
+        json_request = {
+            "requests": [
+                {
+                    "start_date": start_date.isoformat(),
+                    "end_date": end_date.isoformat(),
+                    "ticker": {"symbol": ticker.to_json()},
+                }
+                for start_date, end_date, ticker in requests
+            ]
+        }
+
         async with aiohttp.ClientSession() as client:
             response = await client.post(
                 self.api_url,
-                json={
-                    "requests": [
-                        {
-                            "start_date": start_date.isoformat(),
-                            "end_date": end_date.isoformat(),
-                            "ticker": {"symbol": ticker.to_json()},
-                        }
-                        for start_date, end_date, ticker in requests
-                    ]
-                },
+                json=json_request,
             )
         if response.status != HTTPStatus.OK:
+            logger.warning("Failed ohlc proxy request: {json_request}")
             return None
 
         ohlc_data = await response.json()

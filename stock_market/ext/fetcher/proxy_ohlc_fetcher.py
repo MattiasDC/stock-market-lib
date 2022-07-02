@@ -35,7 +35,7 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
                 json=json_request,
             )
         if response.status != HTTPStatus.OK:
-            logger.warning("Failed ohlc proxy request: {json_request}")
+            logger.warning(f"Failed ohlc proxy request: {json_request}")
             return None
 
         ohlc_data = await response.json()

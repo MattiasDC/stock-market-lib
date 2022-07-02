@@ -121,7 +121,8 @@ class OHLC:
 def merge_ohlcs(first, second):
     if first is None:
         return second
-    assert second is not None
+    if second is None:
+        return first
     dates = pd.concat([first.dates, second.dates], ignore_index=True)
     dates.drop_duplicates(keep="last", inplace=True)
     return OHLC.from_series(

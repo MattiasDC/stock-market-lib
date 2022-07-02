@@ -28,9 +28,12 @@ class YahooOHLCFetcher(OHLCFetcher, EmptyJsonMixin):
         except json.decoder.JSONDecodeError:
             logger.warning("Yahoo Finance rate limit encountered!")
             return None
-        except AssertionError:  # Be flexible in start and end ranges
+        except AssertionError as e:  # Be flexible in start and end ranges
             logger.warning(
-                f"Error during Yahoo Finance data request: {ticker}, {start}, {end}"
+                f"Error during Yahoo Finance data request: {ticker}, {start}, {end}."
+            )
+            logger.debug(
+                f"Assertion error encountered during Yahoo Finance request: {e}"
             )
             return None
         # Occurs when no data could be retrieved for the interval

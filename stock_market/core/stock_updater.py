@@ -28,6 +28,9 @@ class StockUpdater:
         requests = [
             self._get_period(stock_market, t, date) + (t,) for t in stock_market.tickers
         ]
+        if len(requests) == 0:
+            return stock_market
+
         results = await self.__ohlc_fetcher.fetch_ohlc(requests)
         if results is None:
             return stock_market

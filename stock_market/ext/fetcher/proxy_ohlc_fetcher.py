@@ -23,7 +23,7 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
                 {
                     "start_date": start_date.isoformat(),
                     "end_date": end_date.isoformat(),
-                    "ticker": {"symbol": ticker.to_json()},
+                    "ticker": {"symbol": ticker.symbol},
                 }
                 for start_date, end_date, ticker in requests
             ]
@@ -35,7 +35,7 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
                 json=json_request,
             )
         if response.status != HTTPStatus.OK:
-            logger.warning(f"Failed ohlc proxy request: {json_request}")
+            logger.warning(f"No new ohlc data from proxy request: {json_request}")
             return None
 
         ohlc_data = await response.json()

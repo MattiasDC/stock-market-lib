@@ -67,7 +67,6 @@ class TimeSeries:
     def trim(self, start_date, end_date):
         """Trims the series to only contain values at or after the given start date and
         before the given end date. The end date is not included."""
-        assert start_date < end_date
         return self.start_at(start_date).end_at(end_date)
 
     def __eq__(self, other):

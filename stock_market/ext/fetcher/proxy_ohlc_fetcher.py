@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import aiohttp
 from utils.logging import get_logger
 
@@ -24,12 +26,15 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
                         {
                             "start_date": start_date.isoformat(),
                             "end_date": end_date.isoformat(),
-                            "ticker": ticker.to_json(),
+                            "ticker": {"symbol": ticker.to_json()},
                         }
                         for start_date, end_date, ticker in requests
                     ]
                 },
             )
+        if response.status != HTTPStatus.OK:
+            return None
+
         ohlc_data = await response.json()
         return [
             (Ticker.from_json(ticker), OHLC.from_json(ohlc))

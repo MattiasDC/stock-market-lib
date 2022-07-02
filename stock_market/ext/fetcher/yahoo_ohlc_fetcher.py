@@ -1,4 +1,5 @@
 import json
+import traceback
 
 import requests
 import yahoo_fin.stock_info as yf
@@ -33,7 +34,8 @@ class YahooOHLCFetcher(OHLCFetcher, EmptyJsonMixin):
                 f"Error during Yahoo Finance data request: {ticker}, {start}, {end}."
             )
             logger.debug(
-                f"Assertion error encountered during Yahoo Finance request: {e}"
+                f"Assertion error encountered during Yahoo Finance request: {e},\n"
+                f" {traceback.format_exc()}"
             )
             return None
         # Occurs when no data could be retrieved for the interval

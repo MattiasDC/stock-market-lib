@@ -41,7 +41,7 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
             ohlc_data = await response.json()
         return [
             (Ticker.from_json(ticker), OHLC.from_json(ohlc))
-            for ticker, ohlc in ohlc_data.items()
+            for ticker, ohlc in ohlc_data
         ]
 
     def __eq__(self, other):

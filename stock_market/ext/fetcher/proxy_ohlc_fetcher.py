@@ -34,11 +34,11 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
                 self.api_url,
                 json=json_request,
             )
-        if response.status != HTTPStatus.OK:
-            logger.warning(f"No new ohlc data from proxy request: {json_request}")
-            return None
+            if response.status != HTTPStatus.OK:
+                logger.warning(f"No new ohlc data from proxy request: {json_request}")
+                return None
 
-        ohlc_data = await response.json()
+            ohlc_data = await response.json()
         return [
             (Ticker.from_json(ticker), OHLC.from_json(ohlc))
             for ticker, ohlc in ohlc_data.items()

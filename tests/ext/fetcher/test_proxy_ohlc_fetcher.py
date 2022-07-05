@@ -56,7 +56,7 @@ def create_response(
     assert dt.date.fromisoformat(json_data["start_date"]) == assert_start_date
     assert dt.date.fromisoformat(json_data["end_date"]) == assert_end_date
     assert assert_ticker == Ticker(json_data["ticker"]["symbol"])
-    return CallbackResult(body=json.dumps({assert_ticker.to_json(): ohlc.to_json()}))
+    return CallbackResult(body=json.dumps([(assert_ticker.to_json(), ohlc.to_json())]))
 
 
 async def test_update(

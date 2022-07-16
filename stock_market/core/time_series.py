@@ -10,6 +10,7 @@ class TimeSeries:
         self.__name = name
         self.__day_data = day_data.copy()
         self.__day_data.columns = ["date", "value"]
+        self.__day_data.sort_values(by="date", inplace=True)
         self.__day_data.date = pd.to_datetime(self.__day_data.iloc[:, 0]).dt.date
         assert is_numeric_dtype(self.__day_data.value)
         assert self.start <= self.end
@@ -100,7 +101,6 @@ def merge_time_series(first, second):
     assert first.name == second.name
     time_values = pd.concat([first.time_values, second.time_values], ignore_index=True)
     time_values.drop_duplicates(subset="date", keep="last", inplace=True)
-    time_values = time_values.sort_index()
     return TimeSeries(first.name, time_values)
 
 

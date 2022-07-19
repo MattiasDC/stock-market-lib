@@ -67,6 +67,8 @@ class OHLC:
     def keep_recent_days(self, days):
         assert days < (self.end - self.start).days + 1
         new_open = self.open.keep_recent_days(days)
+        if new_open is None:
+            return None
         return OHLC.from_series(
             new_open.dates,
             new_open,
@@ -79,6 +81,8 @@ class OHLC:
         """Trims the OHCL to only contain values at or after the given start date
         and before the given end date. The end date is not included."""
         new_open = self.open.trim(start_date, end_date)
+        if new_open is None:
+            return None
         return OHLC.from_series(
             new_open.dates,
             new_open,

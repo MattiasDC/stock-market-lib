@@ -273,7 +273,7 @@ class GraphSignalDetector(SignalDetector):
         return mutable_sequence.get()
 
     def is_valid(self, stock_market):
-        return all((t in self.__tickers for t in stock_market.tickers))
+        return all((t in stock_market.tickers for t in self.__tickers))
 
     @staticmethod
     def __eq_machines(first, second):

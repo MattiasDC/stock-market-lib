@@ -5,12 +5,18 @@ import toolz
 
 from .time_series import TimeSeries, merge_time_series
 
-"""
-Open-high-low-close time series data.
-"""
+
+def create_ohlc(dates, *args):
+    if len(dates) == 0:
+        return None
+    return OHLC(dates, *args)
 
 
 class OHLC:
+    """
+    Open-high-low-close time series data.
+    """
+
     def __init__(self, dates, open, high, low, close):
         dates = pd.to_datetime(dates).dt.date
         self.__open = TimeSeries(
@@ -28,7 +34,7 @@ class OHLC:
 
     @staticmethod
     def from_series(dates, open, high, low, close):
-        return OHLC(dates, open.values, high.values, low.values, close.values)
+        return create_ohlc(dates, open.values, high.values, low.values, close.values)
 
     @property
     def start(self):

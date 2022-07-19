@@ -5,6 +5,13 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 
 
+def create_time_series(name, day_data):
+    if len(day_data) == 0:
+        return None
+
+    return TimeSeries(name, day_data)
+
+
 class TimeSeries:
     def __init__(self, name: str, day_data: pd.DataFrame):
         self.__name = name
@@ -45,7 +52,7 @@ class TimeSeries:
 
     def keep_recent_days(self, days):
         """Trims the series at the start of the series to keep 'days' days"""
-        return TimeSeries(
+        return create_time_series(
             self.name,
             self.time_values.loc[
                 self.time_values.date > self.end - datetime.timedelta(days=days)
@@ -54,14 +61,14 @@ class TimeSeries:
 
     def start_at(self, start_date):
         """Trims the series to only contain values at or after the given start date"""
-        return TimeSeries(
+        return create_time_series(
             self.name, self.time_values.loc[self.time_values.date >= start_date]
         )
 
     def end_at(self, end_date):
         """Trims the series to only contain values before the given end date.
         The end date is not included."""
-        return TimeSeries(
+        return create_time_series(
             self.name, self.time_values.loc[self.time_values.date < end_date]
         )
 

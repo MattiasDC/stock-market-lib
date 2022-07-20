@@ -13,6 +13,9 @@ class Ticker(SingleAttributeJsonMixin):
     def symbol(self):
         return self.__symbol
 
+    def __lt__(self, other):
+        return self.symbol < other.symbol
+
     def __eq__(self, other):
         if not isinstance(other, Ticker):
             return False

@@ -13,7 +13,7 @@ Optionally ticker OHLCs can be given to instantiate the stock market.
 class StockMarket:
     def __init__(self, start_date, tickers, ticker_OHLCs={}):
         self.__start_date = start_date
-        self.__tickers = tickers
+        self.__tickers = sorted(tickers)
         self.__ticker_OHLCs = ticker_OHLCs
 
     @property

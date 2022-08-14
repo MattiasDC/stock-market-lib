@@ -2,7 +2,7 @@
 
 stock-market-lib is a Python library that contains functionality related to stocks and the stock market in general.
 It also contains functionality to analyze stock time series.
-All classes are considered immutable and should not be changed.
+All classes are considered immutable.
 
 ## Installation
 

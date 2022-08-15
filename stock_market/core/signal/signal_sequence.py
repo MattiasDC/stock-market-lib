@@ -1,7 +1,7 @@
 import json
 from heapq import merge
 
-from utils.algos import is_sorted
+from simputils.algos import is_sorted
 
 from .signal import Signal
 

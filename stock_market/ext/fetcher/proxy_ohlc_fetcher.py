@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 import aiohttp
-from utils.logging import get_logger
+from simputils.logging import get_logger
 
 from stock_market.common.json_mixins import SingleAttributeJsonMixin
 from stock_market.core import OHLC, OHLCFetcher, Ticker

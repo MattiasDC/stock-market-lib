@@ -2,9 +2,9 @@ import copy
 import json
 from enum import Enum
 
+from simputils.functional import Mutable
 from transitions import State
 from transitions.extensions.markup import MarkupMachine
-from utils.functional import Mutable
 
 from stock_market.common.json_mixins import SingleAttributeJsonMixin
 from stock_market.core import (

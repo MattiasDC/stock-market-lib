@@ -3,7 +3,7 @@ import json
 from itertools import islice
 
 from jsonschema import validate
-from utils.algos import all_equal
+from simputils.algos import all_equal
 
 from stock_market.common.factory import Factory
 from stock_market.core import (

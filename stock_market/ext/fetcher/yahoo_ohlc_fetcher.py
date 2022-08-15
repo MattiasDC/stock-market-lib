@@ -3,7 +3,7 @@ import traceback
 
 import requests
 import yahoo_fin.stock_info as yf
-from utils.logging import get_logger
+from simputils.logging import get_logger
 
 from stock_market.common.json_mixins import EmptyJsonMixin
 from stock_market.core import OHLC, OHLCFetcher

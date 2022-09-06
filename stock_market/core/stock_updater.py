@@ -1,3 +1,5 @@
+import datetime as dt
+
 from .ohlc import merge_ohlcs
 from .ticker_ohlc import TickerOHLC
 
@@ -18,15 +20,20 @@ class StockUpdater:
             TickerOHLC(ticker, merge_ohlcs(old_ohlc, ohlc))
         )
 
-    def _get_period(self, stock_market, ticker, date):
+    def _get_period(self, stock_market, ticker):
         ohlc = stock_market.ohlc(ticker)
         if ohlc is None:
-            return stock_market.start_date, date
-        return ohlc.end, date
+            return stock_market.start_date
+        return ohlc.end + dt.timedelta(days=1)
 
     async def update(self, date, stock_market):
         requests = [
-            self._get_period(stock_market, t, date) + (t,) for t in stock_market.tickers
+            self._get_period(stock_market, t)
+            + (
+                date,
+                t,
+            )
+            for t in stock_market.tickers
         ]
         if len(requests) == 0:
             return stock_market

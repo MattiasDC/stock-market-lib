@@ -40,6 +40,8 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
             ):
                 logger.warning(f"Failed request for new ohlc data: {json_request}")
                 return None
+            if response.status == HTTPStatus.NO_CONTENT:
+                return None
 
             ohlc_data = await response.json()
         return [

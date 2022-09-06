@@ -29,7 +29,11 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
             ]
         }
 
-        async with CachedSession(cache=SQLiteBackend()) as session:
+        async with CachedSession(
+            cache=SQLiteBackend(
+                allowed_methods=["POST"], allowed_codes=[200, 203, 204, 300, 301, 308]
+            )
+        ) as session:
             response = await session.post(
                 self.api_url,
                 json=json_request,

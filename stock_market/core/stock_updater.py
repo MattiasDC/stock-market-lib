@@ -28,8 +28,8 @@ class StockUpdater:
 
     async def update(self, date, stock_market):
         requests = [
-            self._get_period(stock_market, t)
-            + (
+            (
+                self._get_period(stock_market, t),
                 date,
                 t,
             )

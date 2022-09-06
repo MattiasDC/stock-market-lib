@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-import aiohttp
+from aiohttp_client_cache import CachedSession, SQLiteBackend
 from simputils.logging import get_logger
 
 from stock_market.common.json_mixins import SingleAttributeJsonMixin
@@ -29,13 +29,16 @@ class ProxyOHLCFetcher(OHLCFetcher, SingleAttributeJsonMixin):
             ]
         }
 
-        async with aiohttp.ClientSession() as client:
-            response = await client.post(
+        async with CachedSession(cache=SQLiteBackend()) as session:
+            response = await session.post(
                 self.api_url,
                 json=json_request,
             )
-            if response.status != HTTPStatus.OK:
-                logger.warning(f"No new ohlc data from proxy request: {json_request}")
+            if (
+                response.status != HTTPStatus.OK
+                and response.status != HTTPStatus.NO_CONTENT
+            ):
+                logger.warning(f"Failed request for new ohlc data: {json_request}")
                 return None
 
             ohlc_data = await response.json()

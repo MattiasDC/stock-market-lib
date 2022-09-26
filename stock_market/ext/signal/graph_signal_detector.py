@@ -204,6 +204,8 @@ class GraphSignalDetectorBuilder:
 
 
 class Model:
+    name: str = "Model"
+
     @staticmethod
     def add_bullish_signal(*args):
         GraphSignalDetector.add_state_signal(*args, Sentiment.BULLISH)

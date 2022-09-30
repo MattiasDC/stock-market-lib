@@ -18,12 +18,11 @@ class SignalSequence:
     def signals(self):
         return self.__signals
 
-    """
-    Returns all signals since the given date.
-    The given date is not included.
-    """
-
     def signals_since(self, date):
+        """
+        Returns all signals since the given date.
+        The given date is not included.
+        """
         return [s for s in self.signals if s.date > date]
 
     def __str__(self):

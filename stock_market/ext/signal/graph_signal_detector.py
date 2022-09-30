@@ -1,4 +1,5 @@
 import copy
+import datetime as dt
 import json
 from enum import Enum
 
@@ -96,14 +97,14 @@ class GraphSignalDetectorBuilder:
         return builder
 
     @staticmethod
-    def __create_state(state_description, signal_descriptions, model):
+    def __create_state(state_description, signal_descriptions):
         def __get_signal_factory(sentiment):
             if sentiment == Sentiment.BULLISH:
-                return model.add_bullish_signal
+                return Model.add_bullish_signal
             elif sentiment == Sentiment.BEARISH:
-                return model.add_bearish_signal
+                return Model.add_bearish_signal
             assert sentiment == Sentiment.NEUTRAL
-            return model.add_neutral_signal
+            return Model.add_neutral_signal
 
         enters = []
         exits = []
@@ -123,10 +124,10 @@ class GraphSignalDetectorBuilder:
         )
 
     @staticmethod
-    def __create_states(state_descriptions, signal_descriptions, model):
+    def __create_states(state_descriptions, signal_descriptions):
         assert state_descriptions is not None and len(state_descriptions) > 0
         return [
-            GraphSignalDetectorBuilder.__create_state(s, signal_descriptions, model)
+            GraphSignalDetectorBuilder.__create_state(s, signal_descriptions)
             for s in state_descriptions
         ]
 
@@ -136,11 +137,10 @@ class GraphSignalDetectorBuilder:
     ):
         assert initial_state is not None
         transitions = [t | {"trigger": str(t["trigger"])} for t in transitions]
-        model = Model()
         return MarkupMachine(
-            model=model,
+            model=[],
             states=GraphSignalDetectorBuilder.__create_states(
-                state_descriptions, signal_descriptions, model
+                state_descriptions, signal_descriptions
             ),
             initial=initial_state,
             transitions=transitions,
@@ -230,6 +230,7 @@ class GraphSignalDetector(SignalDetector):
         super().__init__(identifier, name)
         self.detectors = detectors
         self.machine = machine
+        assert len(self.machine.models) == 0
 
     @staticmethod
     def add_state_signal(
@@ -249,14 +250,15 @@ class GraphSignalDetector(SignalDetector):
                 tickers |= d.tickers
         return list(tickers)
 
-    @property
-    def __model(self):
-        return self.machine.models[0]
-
     def detect(self, from_date, to_date, stock_market, sequence):
+        model = Model()
+        self.machine.add_model(model)
+
         signals = merge_signals(
             *[
-                detector.detect(from_date, to_date, stock_market, SignalSequence())
+                detector.detect(
+                    stock_market.start_date, to_date, stock_market, SignalSequence()
+                )
                 for detector in self.detectors
             ]
         )
@@ -272,7 +274,10 @@ class GraphSignalDetector(SignalDetector):
                 self.__tickers,
             )
 
-        return mutable_sequence.get()
+        self.machine.remove_model(model)
+        return SignalSequence(
+            mutable_sequence.get().signals_since(from_date - dt.timedelta(days=1))
+        )
 
     def is_valid(self, stock_market):
         return all((t in stock_market.tickers for t in self.__tickers))
@@ -281,14 +286,9 @@ class GraphSignalDetector(SignalDetector):
     def __eq_machines(first, second):
         first_markup = first.markup
         second_markup = second.markup
-        return (
-            first_markup["states"],
-            first_markup["transitions"],
-            first.models[0].state,
-        ) == (
+        return (first_markup["states"], first_markup["transitions"],) == (
             second_markup["states"],
             second_markup["transitions"],
-            second.models[0].state,
         )
 
     def __eq__(self, other):

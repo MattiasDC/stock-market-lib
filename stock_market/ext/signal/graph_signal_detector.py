@@ -265,7 +265,7 @@ class GraphSignalDetector(SignalDetector):
 
         mutable_sequence = Mutable(sequence)
         for signal in signals.signals:
-            self.__model.trigger(
+            model.trigger(
                 str(signal.id),
                 self.id,
                 self.name,

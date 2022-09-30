@@ -263,7 +263,7 @@ class GraphSignalDetector(SignalDetector):
             ]
         )
 
-        mutable_sequence = Mutable(sequence)
+        mutable_sequence = Mutable(SignalSequence())
         for signal in signals.signals:
             model.trigger(
                 str(signal.id),
@@ -275,8 +275,9 @@ class GraphSignalDetector(SignalDetector):
             )
 
         self.machine.remove_model(model)
-        return SignalSequence(
-            mutable_sequence.get().signals_since(from_date - dt.timedelta(days=1))
+        return merge_signals(
+            sequence,
+            mutable_sequence.get().signals_since(from_date - dt.timedelta(days=1)),
         )
 
     def is_valid(self, stock_market):

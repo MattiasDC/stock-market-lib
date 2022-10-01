@@ -74,8 +74,8 @@ def test_merge_signals(date, signal, second_signal, third_signal):
 def test_signals_since(date, signal, second_signal, third_signal):
     signals = [signal, second_signal, third_signal]
     ss = SignalSequence(signals)
-    assert ss.signals_since(date - datetime.timedelta(days=1)) == signals
-    assert ss.signals_since(date) == [third_signal]
+    assert ss.signals_since(date - datetime.timedelta(days=1)) == ss
+    assert ss.signals_since(date) == SignalSequence([third_signal])
 
 
 def test_eq(signal, second_signal, third_signal):

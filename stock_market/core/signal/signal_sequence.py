@@ -23,7 +23,7 @@ class SignalSequence:
         Returns all signals since the given date.
         The given date is not included.
         """
-        return [s for s in self.signals if s.date > date]
+        return SignalSequence([s for s in self.signals if s.date > date])
 
     def __str__(self):
         signals_string = ", ".join(map(str, self.signals))

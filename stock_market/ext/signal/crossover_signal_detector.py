@@ -60,7 +60,9 @@ class CrossoverSignalDetector(SignalDetector):
         if len(crossovers_indices) == 0:
             return sequence
 
-        crossovers_indices.iloc[0] = False  # not interested in the day before from_date
+        crossovers_indices.iloc[0] = False  # Not interested in the day before from_date
+        crossovers_indices.iloc[1] = True  # Start with initial crossover start
+
         for _, date_and_value in relevant_differences.loc[
             crossovers_indices
         ].iterrows():
@@ -73,18 +75,9 @@ class CrossoverSignalDetector(SignalDetector):
                 )[self.__unresponsive_indicator_getter.lag_days()].date()
             ):
                 continue  # Unresponsive getter has not been completely setup yet
-            if date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH:
-                sequence = add_signal(
-                    sequence,
-                    Signal(
-                        self.id,
-                        self.name,
-                        self.__sentiment,
-                        date_and_value.date,
-                        [self.ticker],
-                    ),
-                )
-            elif date_and_value.value < 0 and self.__sentiment == Sentiment.BEARISH:
+            if (date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH) or (
+                date_and_value.value < 0 and self.__sentiment == Sentiment.BEARISH
+            ):
                 sequence = add_signal(
                     sequence,
                     Signal(

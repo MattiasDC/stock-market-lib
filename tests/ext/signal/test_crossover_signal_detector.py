@@ -41,7 +41,8 @@ def alternates_bullish_bearish(signal_sequence):
 
 def validate_crossovers(crossover_signals, series, indicator_series):
     crossover_indices = series.dates.loc[
-        series.dates.isin(map(lambda s: s.date, crossover_signals.signals))
+        # Skip first one as that's the initial signal
+        series.dates.isin(map(lambda s: s.date, crossover_signals.signals[1:]))
     ].index
     crossover_indices_and_before = crossover_indices.union(crossover_indices - 1)
     differences = (

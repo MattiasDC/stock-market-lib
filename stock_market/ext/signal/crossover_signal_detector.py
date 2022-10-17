@@ -70,7 +70,7 @@ class CrossoverSignalDetector(SignalDetector):
         ]
 
         added_setup_signal = False
-        if sequence.is_empty() == 0:
+        if sequence.is_empty():
             sequence = self.__add_signal(sequence, from_date)
             added_setup_signal = True
 

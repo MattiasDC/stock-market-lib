@@ -18,6 +18,9 @@ class SignalSequence:
     def signals(self):
         return self.__signals
 
+    def is_empty(self):
+        return len(self.signals) == 0
+
     def signals_since(self, date):
         """
         Returns all signals since the given date.

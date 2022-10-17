@@ -39,6 +39,11 @@ class CrossoverSignalDetector(SignalDetector):
     def is_valid(self, stock_market):
         return self.ticker in stock_market.tickers
 
+    def __add_signal(self, sequence, date):
+        return add_signal(
+            sequence, Signal(self.id, self.name, self.__sentiment, date, [self.ticker])
+        )
+
     def detect(self, from_date, to_date, stock_market, sequence):
         ohlc = stock_market.ohlc(self.ticker)
         if ohlc is None:
@@ -50,10 +55,24 @@ class CrossoverSignalDetector(SignalDetector):
         difference = TimeSeries(
             "difference", pd.concat([ohlc.dates, difference], axis=1, ignore_index=True)
         )
+
+        # Only interested in crossovers when unresponsive getter is setup
+        first_non_lagged_date = rrule(
+            DAILY,
+            dtstart=stock_market.start_date,
+            byweekday=(MO, TU, WE, TH, FR),
+        )[self.__unresponsive_indicator_getter.lag_days()].date()
+        from_date = max(first_non_lagged_date, from_date)
+
         relevant_differences = difference.time_values.loc[
             (difference.dates >= (from_date - dt.timedelta(days=1)))
             & (difference.dates <= to_date)
         ]
+
+        added_setup_signal = False
+        if sequence.is_empty() == 0:
+            sequence = self.__add_signal(sequence, from_date)
+            added_setup_signal = True
 
         # Extract all date/values where we crossover
         crossovers_indices = np.sign(relevant_differences.value).diff().ne(0)
@@ -61,33 +80,18 @@ class CrossoverSignalDetector(SignalDetector):
             return sequence
 
         crossovers_indices.iloc[0] = False  # Not interested in the day before from_date
-        crossovers_indices.iloc[1] = True  # Start with initial crossover start
 
         for _, date_and_value in relevant_differences.loc[
             crossovers_indices
         ].iterrows():
-            if (
-                date_and_value.date
-                < rrule(
-                    DAILY,
-                    dtstart=stock_market.start_date,
-                    byweekday=(MO, TU, WE, TH, FR),
-                )[self.__unresponsive_indicator_getter.lag_days()].date()
-            ):
-                continue  # Unresponsive getter has not been completely setup yet
+            assert date_and_value.date >= from_date
+            if added_setup_signal and date_and_value.date == from_date:
+                continue  # already added as part of setup
+
             if (date_and_value.value > 0 and self.__sentiment == Sentiment.BULLISH) or (
                 date_and_value.value < 0 and self.__sentiment == Sentiment.BEARISH
             ):
-                sequence = add_signal(
-                    sequence,
-                    Signal(
-                        self.id,
-                        self.name,
-                        self.__sentiment,
-                        date_and_value.date,
-                        [self.ticker],
-                    ),
-                )
+                sequence = self.__add_signal(sequence, date_and_value.date)
         return sequence
 
     def __eq__(self, other):

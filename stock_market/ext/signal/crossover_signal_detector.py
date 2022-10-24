@@ -70,7 +70,9 @@ class CrossoverSignalDetector(SignalDetector):
         ]
 
         added_setup_signal = False
-        if sequence.is_empty():
+        if sequence.is_empty() and (difference.value_at(from_date) >= 0) == (
+            self.__sentiment == Sentiment.BULLISH
+        ):
             sequence = self.__add_signal(sequence, from_date)
             added_setup_signal = True
 

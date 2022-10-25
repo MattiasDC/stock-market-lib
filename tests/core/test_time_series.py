@@ -38,6 +38,11 @@ def test_values(ts, raw_data):
     assert raw_data["Close"].equals(ts.values)
 
 
+def test_value_at(ts, raw_data):
+    print(raw_data["Close"].iloc[0])
+    assert ts.value_at(ts.start) == raw_data["Close"].iloc[0]
+
+
 def test_dates(ts, raw_data):
     assert pd.to_datetime(raw_data["Date"]).dt.date.equals(ts.dates)
 

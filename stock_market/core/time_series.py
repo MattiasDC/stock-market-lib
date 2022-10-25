@@ -42,6 +42,9 @@ class TimeSeries:
     def values(self):
         return self.__day_data.value
 
+    def value_at(self, date):
+        return self.time_values.loc[self.time_values.date >= date].value.iloc[0]
+
     @property
     def dates(self):
         return self.__day_data.date

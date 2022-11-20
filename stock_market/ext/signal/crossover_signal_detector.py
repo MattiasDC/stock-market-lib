@@ -70,11 +70,13 @@ class CrossoverSignalDetector(SignalDetector):
         ]
 
         added_setup_signal = False
-        if sequence.is_empty() and (difference.value_at(from_date) >= 0) == (
-            self.__sentiment == Sentiment.BULLISH
-        ):
-            sequence = self.__add_signal(sequence, from_date)
-            added_setup_signal = True
+        if sequence.is_empty():
+            nearest_value_to_from = difference.value_nearest(from_date)
+            if nearest_value_to_from is not None and (
+                difference.value_nearest(from_date) >= 0
+            ) == (self.__sentiment == Sentiment.BULLISH):
+                sequence = self.__add_signal(sequence, from_date)
+                added_setup_signal = True
 
         # Extract all date/values where we crossover
         crossovers_indices = np.sign(relevant_differences.value).diff().ne(0)

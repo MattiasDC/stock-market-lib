@@ -38,9 +38,16 @@ def test_values(ts, raw_data):
     assert raw_data["Close"].equals(ts.values)
 
 
-def test_value_at(ts, raw_data):
-    print(raw_data["Close"].iloc[0])
-    assert ts.value_at(ts.start) == raw_data["Close"].iloc[0]
+def test_value_nearest(ts, raw_data):
+    close = raw_data["Close"]
+    assert ts.value_nearest(ts.start) == close.iloc[0]
+    assert ts.value_nearest(ts.end) == close.iloc[-1]
+    assert (
+        ts.trim(ts.start, ts.start + dt.timedelta(days=1)).value_nearest(ts.start)
+        == close.iloc[0]
+    )
+    assert ts.value_nearest(ts.end + dt.timedelta(days=1)) == close.iloc[-1]
+    assert ts.value_nearest(ts.start - dt.timedelta(days=1)) == close.iloc[0]
 
 
 def test_dates(ts, raw_data):

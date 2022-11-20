@@ -42,8 +42,11 @@ class TimeSeries:
     def values(self):
         return self.__day_data.value
 
-    def value_at(self, date):
-        return self.time_values.loc[self.time_values.date >= date].value.iloc[0]
+    def value_nearest(self, date):
+        nearest_date_location = (self.time_values.date - date).abs().argsort()
+        if len(nearest_date_location) == 0:
+            return None
+        return self.time_values.iloc[nearest_date_location[0]].value
 
     @property
     def dates(self):

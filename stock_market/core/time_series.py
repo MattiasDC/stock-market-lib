@@ -46,7 +46,7 @@ class TimeSeries:
         nearest_date_location = (self.time_values.date - date).abs().argsort()
         if len(nearest_date_location) == 0:
             return None
-        return self.time_values.iloc[nearest_date_location[0]].value
+        return self.time_values.iloc[nearest_date_location.iloc[0]].value
 
     @property
     def dates(self):
